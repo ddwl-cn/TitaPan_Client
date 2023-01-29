@@ -118,6 +118,7 @@
               placeholder="输入关键字搜索"
             />
           </template>
+          <div style="float: left">
           <el-button
             type="success"
             size="mini"
@@ -207,9 +208,10 @@
             type="warning"
             icon="el-icon-download"
             size="mini"
-            v-show="!scope.row.isEdit"
+            v-show="!scope.row.isEdit && !scope.row.isFolder"
             @click="downloadFile(scope.row)"
           ></el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -509,13 +511,11 @@ export default {
           }
           window.writer = fileStream.getWriter();
           const reader = res.body.getReader();
-          const pump = () =>
-            reader.read().then((res) =>
-                                res.done
-                                  ? window.writer.close()
-                                  : window.writer.write(res.value).then(pump)
-                              );
-
+          const pump = () => reader.read().then((res) =>
+                                                  res.done
+                                                      ? window.writer.close()
+                                                      : window.writer.write(res.value).then(pump)
+                                              );
           pump();
 
         })
