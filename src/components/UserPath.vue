@@ -61,6 +61,7 @@ export default {
       sessionStorage.setItem("position", this.position);
       sessionStorage.setItem("userPath", JSON.stringify(this.userPath));
     },
+    // 弃用
     next() {
       if (this.position >= this.userPath.length) {
         return;
@@ -85,6 +86,7 @@ export default {
         // 后面的路径直接舍弃
         this.userPath.length = this.position + 1;
       }
+      // 保存路径到本地session存储 确保刷新后任然在当前目录下
       sessionStorage.setItem("position", this.position);
       sessionStorage.setItem("userPath", JSON.stringify(this.userPath));
       this.requestChangePath(this.userPath[this.position]);
@@ -94,7 +96,7 @@ export default {
     },
     // 向后端发送更改路径请求 同时重新更新文件列表
     requestChangePath(path) {
-      console.log("Userpath发起了请求");
+
       this.$http({
         method: "post",
         url: "/user/toPath",
@@ -105,7 +107,6 @@ export default {
         if (res.status === 200) {
           if (res.data.msg === "changePathSuccess") {
             // 重新获取当前目录下的文件列表
-            console.log(this.$parent.$parent.$parent);
             this.$parent.$parent.$parent.$parent.getUserFileList();
           } else {
             this.$message({
@@ -113,7 +114,12 @@ export default {
               message: "路径错误!",
             });
           }
-        } else console.log(res);
+        } else {
+          this.$message({
+            type: "error",
+            message: "未知错误!",
+          });
+        }
       });
     },
   },

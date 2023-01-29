@@ -26,9 +26,6 @@ export default {
   name: "Navigation",
   components: {},
   methods: {
-    onChange(e, list) {
-      console.log(e, list);
-    },
   },
 };
 </script>

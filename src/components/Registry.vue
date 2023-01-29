@@ -99,7 +99,6 @@ export default {
             type: "success",
             message: "注册成功,前往登录!",
           });
-          // console.log(response)
           this.$router.push("/login");
         } else if (response.data.msg === "userExisted") {
           this.$message({

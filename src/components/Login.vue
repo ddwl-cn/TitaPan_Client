@@ -80,7 +80,6 @@ export default {
         });
         // 把token存入本地存储
         localStorage.setItem("token", response.headers.token);
-        // console.log(response)
         this.$router.push("/user/home");
       });
     },

@@ -158,7 +158,7 @@ export default {
       userPath: '/',
       userPathStack: ['/'],
       index: 0,
-
+      // 提取文件相关表单
       form: {
         savePath: this.userPath,
         share_uuid: this.$route.params.share_uuid,
