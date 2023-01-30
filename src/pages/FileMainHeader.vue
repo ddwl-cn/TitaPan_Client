@@ -1,7 +1,7 @@
 <template>
   <div>
     <UserPath ref="UserPath" />
-    <div style="margin-top: -28px">
+    <div style="margin-top: -35px">
       <el-upload
         ref="upload"
         action=""
@@ -139,7 +139,6 @@
           @click="handleDeleteSelected"
           >删除已选</el-button
         >
-        <div slot="tip" class="el-upload__tip">单文件不能不超过1GB</div>
       </el-upload>
     </div>
   </div>
@@ -304,97 +303,112 @@ export default {
                 data: form,
               }).then((res) => {
 
-                if (res.data.msg === "commonUpload") {
-                  // 传入文件数据
-                  form.mFile = this.file_chunk_arr[i][j];
-                  this.$http({
-                    signal: this.requestController[i].signal,
-                    headers: {
-                      // springboot后端使用multipart/form-data的形式提交
-                      "Content-Type": "multipart/form-data",
-                    },
-                    method: "POST",
-                    url: "/upload/commonUpload",
-                    onUploadProgress: (progressEvent) => {
-                      let formSize =
-                        progressEvent.total - this.file_chunk_arr[i][j].size;
-                      let loaded = std_chunk_size * j;
-                      this.percentage.splice(
-                        i,
-                        1,
-                        ((loaded + progressEvent.loaded) /
-                          (file.size + formSize * total)) *
-                          100
-                      );
-                    },
-                    data: form,
-                  }).then((res) => {
+                if(res.status === 200) {
+                  if (res.data.msg === "commonUpload") {
+                    // 传入文件数据
+                    form.mFile = this.file_chunk_arr[i][j];
+                    this.$http({
+                      signal: this.requestController[i].signal,
+                      headers: {
+                        // springboot后端使用multipart/form-data的形式提交
+                        "Content-Type": "multipart/form-data",
+                      },
+                      method: "POST",
+                      url: "/upload/commonUpload",
+                      onUploadProgress: (progressEvent) => {
+                        let formSize =
+                            progressEvent.total - this.file_chunk_arr[i][j].size;
+                        let loaded = std_chunk_size * j;
+                        this.percentage.splice(
+                            i,
+                            1,
+                            ((loaded + progressEvent.loaded) /
+                                (file.size + formSize * total)) *
+                            100
+                        );
+                      },
+                      data: form,
+                    }).then((res) => {
 
-                    // 全部上传完成
-                    if (res.data.msg === "uploadComplete") {
-                      // 使用数组内置方法Vue才能实时检测到数组内数据的变化
-                      this.percentage.splice(i, 1, 100);
-                      this.isUploading.splice(i, 1, 3);
-                      this.uploadTag.splice(i, 1, total);
-                      this.file_arr.splice(i, 1, null);
-                      this.file_chunk_arr.splice(i, 1, null);
-                      this.md5_arr.splice(i, 1, null);
-                      this.requestController.splice(i, 1, null);
-                      this.getUserFileList()
-                    }
-                    // 当前块上传完成
-                    else if (res.data.msg === "uploadChunkComplete") {
+                      // 全部上传完成
+                      if (res.data.msg === "uploadComplete") {
+                        // 使用数组内置方法Vue才能实时检测到数组内数据的变化
+                        this.percentage.splice(i, 1, 100);
+                        this.isUploading.splice(i, 1, 3);
+                        this.uploadTag.splice(i, 1, total);
+                        this.file_arr.splice(i, 1, null);
+                        this.file_chunk_arr.splice(i, 1, null);
+                        this.md5_arr.splice(i, 1, null);
+                        this.requestController.splice(i, 1, null);
+                        this.getUserFileList()
+                      }
+                      // 当前块上传完成
+                      else if (res.data.msg === "uploadChunkComplete") {
 
-                      this.uploadTag.splice(i, 1, this.uploadTag[i] + 1);
-                      upload(++j);
-                    } else {
-                      this.$message({
-                        type: "error",
-                        message: "未知错误!",
-                      });
-                    }
-                  });
-                } else if (res.data.msg === "quickUpload") {
-                  this.$http({
-                    signal: this.requestController[i].signal,
-                    headers: {
-                      // springboot后端使用multipart/form-data的形式提交
-                      "Content-Type": "multipart/form-data",
-                    },
-                    method: "POST",
-                    url: "/upload/quickUpload",
-                    onUploadProgress: () => {
-                      this.percentage.splice(i, 1, (j / total) * 100);
+                        this.uploadTag.splice(i, 1, this.uploadTag[i] + 1);
+                        upload(++j);
+                      } else {
+                        this.$message({
+                          type: "error",
+                          message: "未知错误!",
+                        });
+                      }
+                    });
+                  } else if (res.data.msg === "quickUpload") {
+                    this.$http({
+                      signal: this.requestController[i].signal,
+                      headers: {
+                        // springboot后端使用multipart/form-data的形式提交
+                        "Content-Type": "multipart/form-data",
+                      },
+                      method: "POST",
+                      url: "/upload/quickUpload",
+                      onUploadProgress: () => {
+                        this.percentage.splice(i, 1, (j / total) * 100);
 
-                    },
-                    data: form,
-                  }).then((res) => {
+                      },
+                      data: form,
+                    }).then((res) => {
 
-                    // 全部上传完成
-                    if (res.data.msg === "uploadComplete") {
-                      this.percentage.splice(i, 1, 100);
-                      this.isUploading.splice(i, 1, 3);
-                      this.uploadTag.splice(i, 1, total);
-                      this.file_arr.splice(i, 1, null);
-                      this.file_chunk_arr.splice(i, 1, null);
-                      this.md5_arr.splice(i, 1, null);
-                      this.requestController.splice(i, 1, null);
-                      this.getUserFileList()
-                    }
-                    // 当前块上传完成
-                    else if (res.data.msg === "uploadChunkComplete") {
+                      // 全部上传完成
+                      if (res.data.msg === "uploadComplete") {
+                        this.percentage.splice(i, 1, 100);
+                        this.isUploading.splice(i, 1, 3);
+                        this.uploadTag.splice(i, 1, total);
+                        this.file_arr.splice(i, 1, null);
+                        this.file_chunk_arr.splice(i, 1, null);
+                        this.md5_arr.splice(i, 1, null);
+                        this.requestController.splice(i, 1, null);
+                        this.getUserFileList()
+                      }
+                      // 当前块上传完成
+                      else if (res.data.msg === "uploadChunkComplete") {
 
-                      this.uploadTag.splice(i, 1, this.uploadTag[i] + 1);
-                      upload(++j);
-                    } else {
-                      alert(res.data.msg);
-                    }
-                  });
-                } else {
+                        this.uploadTag.splice(i, 1, this.uploadTag[i] + 1);
+                        upload(++j);
+                      } else {
+                        alert(res.data.msg);
+                      }
+                    });
+                  } else if (res.data.msg === "fileNameRepetitive") {
+                    this.$message({
+                      type: "warning",
+                      message: "当前目录下有重名文件!",
+                    });
+                  } else {
+                    this.$message({
+                      type: "error",
+                      message: "未知错误!",
+                    });
+                    return;
+                  }
+                }
+                else {
                   this.$message({
                     type: "error",
                     message: "未知错误!",
                   });
+                  return;
                 }
               });
             };

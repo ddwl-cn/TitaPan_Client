@@ -12,7 +12,7 @@
       :default-sort="{ prop: 'f_size' }"
       @select="handleSelect"
       @select-all="handleSelectAll"
-      style="width: 100%"
+      style="width: 100%;margin-top: 10px"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
 
@@ -630,6 +630,22 @@ export default {
       this.shareForm.f_name = rowData.f_name;
       this.shareForm.folder = rowData.isFolder;
       this.shareForm.share_uuid = UUID();
+      if(!this.shareForm.valid || (this.shareForm.valid !== '1天' && this.shareForm.valid !== '7天' && this.shareForm.valid !== '30天' && this.shareForm.valid !== '永久')){
+        this.$message({
+          type: "warning",
+          message: "请勾选分享有效时长！"
+        })
+        return;
+      }
+      // 正则表达式验证分享码
+      var zg =  /^[0-9a-zA-Z]*$/;
+      if (!zg.test(this.shareForm.share_code))  {
+        this.$message({
+          type: "warning",
+          message: "必须是长度为6的，且仅包含数字、字母！"
+        })
+        return;
+      }
 
       this.$http({
         method: "POST",
