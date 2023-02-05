@@ -40,8 +40,8 @@ export default {
     return {
       // 用户当前所在路径 默认在根路径
       userPath: JSON.parse(sessionStorage.getItem("userPath")) || ["/"],
-      position: sessionStorage.getItem("position") || 0,
-    };
+      position: parseInt(sessionStorage.getItem("position")) || 0,
+    }
   },
   methods: {
     // 返回根目录
@@ -49,7 +49,7 @@ export default {
       this.position = 0;
       this.requestChangePath(this.userPath[this.position]);
       this.userPath.length = this.position + 1;
-      sessionStorage.setItem("position", this.position);
+      sessionStorage.setItem("position", this.position.toString());
       sessionStorage.setItem("userPath", JSON.stringify(this.userPath));
     },
     // 返回上一级
@@ -58,10 +58,9 @@ export default {
         return;
       }
       this.position--;
-      console.log(this.position, this.userPath[this.position])
       this.requestChangePath(this.userPath[this.position]);
       this.userPath.length = this.position + 1;
-      sessionStorage.setItem("position", this.position);
+      sessionStorage.setItem("position", this.position.toString());
       sessionStorage.setItem("userPath", JSON.stringify(this.userPath));
     },
     // 弃用
@@ -71,7 +70,7 @@ export default {
       }
       this.position++;
       this.requestChangePath(this.userPath[this.position]);
-      sessionStorage.setItem("position", this.position);
+      sessionStorage.setItem("position", this.position.toString());
       sessionStorage.setItem("userPath", JSON.stringify(this.userPath));
     },
     // 传来下一级的文件名称
@@ -79,7 +78,7 @@ export default {
       this.userPath.push(this.userPath[this.position] + nextPath + "/");
       this.position += 1;
       // 保存路径到本地session存储 确保刷新后任然在当前目录下
-      sessionStorage.setItem("position", this.position);
+      sessionStorage.setItem("position", this.position.toString());
       sessionStorage.setItem("userPath", JSON.stringify(this.userPath));
       this.requestChangePath(this.userPath[this.position]);
     },
@@ -88,7 +87,6 @@ export default {
     },
     // 向后端发送更改路径请求 同时重新更新文件列表
     requestChangePath(path) {
-
       this.$http({
         method: "post",
         url: "/user/toPath",

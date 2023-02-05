@@ -598,34 +598,8 @@ export default {
       });
     },
     to(rowData) {
-      this.$http({
-        method: "post",
-        url: "/user/toPath",
-        params: {
-          // 使用了ui组件 父组件可能并不是直接的那一个
-          toPath:
-            this.$parent.$parent.$parent.getUserPath() + rowData.f_name + "/",
-        },
-      }).then((res) => {
-        if (res.status === 200) {
-          if (res.data.msg === "changePathSuccess") {
-            // 切换路径
-            this.$parent.$parent.$parent.toPath(rowData.f_name);
-            // 重新获取当前目录下的文件列表
-            this.getUserFileList();
-          } else {
-            this.$message({
-              type: "error",
-              message: "路径错误!",
-            });
-          }
-        } else {
-          this.$message({
-            type: "error",
-            message: "未知错误!",
-          });
-        }
-      });
+      // 前端真不会写了....中间有element_ui的组件所以有好几个父组件....直接parent套娃....
+      this.$parent.$parent.$parent.toPath(rowData.f_name);
     },
     handleSelect(selections) {
       // 传入已选 和 当前选
