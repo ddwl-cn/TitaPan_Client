@@ -48,6 +48,7 @@ export default {
     root() {
       this.position = 0;
       this.requestChangePath(this.userPath[this.position]);
+      this.userPath.length = this.position + 1;
       sessionStorage.setItem("position", this.position);
       sessionStorage.setItem("userPath", JSON.stringify(this.userPath));
     },
@@ -57,7 +58,9 @@ export default {
         return;
       }
       this.position--;
+      console.log(this.position, this.userPath[this.position])
       this.requestChangePath(this.userPath[this.position]);
+      this.userPath.length = this.position + 1;
       sessionStorage.setItem("position", this.position);
       sessionStorage.setItem("userPath", JSON.stringify(this.userPath));
     },
@@ -73,19 +76,8 @@ export default {
     },
     // 传来下一级的文件名称
     toPath(nextPath) {
-      // 已经在栈顶压入数组当前位置后
-      if (this.position === this.userPath.length - 1) {
-        this.userPath.push(this.userPath[this.position] + nextPath + "/");
-        this.position += 1;
-      }
-      // 不在栈顶指针后移 同时舍弃随后的路径
-      else {
-        this.userPath[this.position + 1] =
-          this.userPath[this.position] + nextPath + "/";
-        this.position += 1;
-        // 后面的路径直接舍弃
-        this.userPath.length = this.position + 1;
-      }
+      this.userPath.push(this.userPath[this.position] + nextPath + "/");
+      this.position += 1;
       // 保存路径到本地session存储 确保刷新后任然在当前目录下
       sessionStorage.setItem("position", this.position);
       sessionStorage.setItem("userPath", JSON.stringify(this.userPath));

@@ -13,6 +13,7 @@
       @select="handleSelect"
       @select-all="handleSelectAll"
       style="width: 100%;margin-top: 10px"
+      @row-dblclick="preview"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
 
@@ -58,6 +59,21 @@
             v-else-if="$FileType.isCompress(scope.row.f_name)"
             style="width: 35px; height: 35px; margin-top: 8px"
             :src="require('../assets/icon/compress.png')"
+          ></el-image>
+          <el-image
+              v-else-if="$FileType.isMusic(scope.row.f_name)"
+              style="width: 35px; height: 35px; margin-top: 8px"
+              :src="require('../assets/icon/music.png')"
+          ></el-image>
+          <el-image
+              v-else-if="$FileType.isVideo(scope.row.f_name)"
+              style="width: 25px; height: 25px; margin-top: 8px;margin-left: 6px"
+              :src="require('../assets/icon/vedio.png')"
+          ></el-image>
+          <el-image
+              v-else-if="$FileType.isExe(scope.row.f_name)"
+              style="width: 25px; height: 25px; margin-top: 8px;margin-left: 6px"
+              :src="require('../assets/icon/exe.png')"
           ></el-image>
           <el-image
             v-else
@@ -108,16 +124,20 @@
         style="height: 15px"
         sortable
       >
+        <template slot-scope="scope">
+          {{changeFileSize(scope.row)}}
+        </template>
       </el-table-column>
       <el-table-column align="right" style="height: 15px">
-        <template slot-scope="scope">
-          <template slot="header">
+
+          <template slot="header" slot-scope="scope">
             <el-input
               v-model="search"
               size="mini"
               placeholder="输入关键字搜索"
             />
           </template>
+        <template slot-scope="scope">
           <div style="float: left">
           <el-button
             type="success"
@@ -271,10 +291,9 @@ export default {
         });
     },
     changeFileSize(file) {
-      if (file.folder) return "-";
       var fileSizeByte = file.f_size;
       var fileSizeMsg = "";
-      if (fileSizeByte < 1048576)
+      if (fileSizeByte > 0 && fileSizeByte < 1048576)
         fileSizeMsg = (fileSizeByte / 1024).toFixed(1) + "KB";
       else if (fileSizeByte == 1048576) fileSizeMsg = "1MB";
       else if (fileSizeByte > 1048576 && fileSizeByte < 1073741824)
@@ -305,7 +324,7 @@ export default {
         res.upload_date = e.upload_date;
         res.f_name = e.f_name;
         res.old_f_name = e.f_name;
-        res.f_size = this.changeFileSize(e);
+        res.f_size = e.f_size;
         res.isFolder = e.folder;
         res.isEdit = false;
         resArr.push(res);
@@ -492,7 +511,7 @@ export default {
       });
     },
     downloadFile(rowData) {
-      fetch("http://127.0.0.1:8080/download/single?f_name=" + rowData.old_f_name, { // 使用old_f_name 防止在修改名字的过程中下载该文件
+      fetch("http://127.0.0.1:8999/download/single?f_name=" + rowData.old_f_name, { // 使用old_f_name 防止在修改名字的过程中下载该文件
         method: "GET",
         mode: "cors", // 跨域
         credentials: "include",
@@ -674,6 +693,24 @@ export default {
           });
         }
       });
+    },
+    preview(rowData){
+      this.$http({
+        method: 'POST',
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        url: '/user/preview',
+        data:{
+          f_name: rowData.f_name
+        }
+      }).then((res)=>{
+        if(res.status === 200){
+          if(res.data.status === 200){
+            window.open("http://127.0.0.1:8012/onlinePreview?url=" + encodeURIComponent(btoa("http://127.0.0.1:8012/" + res.data.data)))
+          }
+        }
+      })
     },
   },
   mounted() {

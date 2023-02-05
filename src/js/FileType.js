@@ -1,6 +1,6 @@
 export default{
     isCode: (fileName)=>{
-        const codeSuffix = ['.cpp', '.html', '.js', '.java', '.c', '.py', '.css', '.php', '.json', '.vue']
+        const codeSuffix = ['.cpp', '.html', '.js', '.java', '.c', '.py', '.css', '.php', '.json', '.vue', '.jsp']
         const fileSuffix = fileName.substr(fileName.lastIndexOf('.'))
         return codeSuffix.indexOf(fileSuffix.toLowerCase()) !== -1
     },
@@ -37,6 +37,17 @@ export default{
         const imgSuffix = ['.zip', '.rar', '.7z', '.iso']
         const fileSuffix = fileName.substr(fileName.lastIndexOf('.'))
         return imgSuffix.indexOf(fileSuffix.toLowerCase()) !== -1
-    }
+    },
+    isMusic: (fileName)=>{
+        const imgSuffix = ['.mp3', '.wma', '.wav', '.rm']
+        const fileSuffix = fileName.substr(fileName.lastIndexOf('.'))
+        return imgSuffix.indexOf(fileSuffix.toLowerCase()) !== -1
+    },
+    isVideo: (fileName)=>{
+        const imgSuffix = ['.mp4', '.avi', '.flv', '.mov']
+        const fileSuffix = fileName.substr(fileName.lastIndexOf('.'))
+        return imgSuffix.indexOf(fileSuffix.toLowerCase()) !== -1
+    },
+
 
 }

@@ -23,7 +23,7 @@ Vue.prototype.$Tips = {
 
 // 添加全局axios
 Vue.prototype.$http = axios;
-axios.defaults.baseURL = "http://127.0.0.1:8080";
+axios.defaults.baseURL = "http://127.0.0.1:8999";
 axios.defaults.withCredentials = true;
 // 配置axios拦截器
 axios.interceptors.request.use((config) => {
