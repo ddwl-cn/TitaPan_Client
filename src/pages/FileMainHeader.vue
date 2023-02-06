@@ -106,7 +106,7 @@
                     "
                     >上传</span
                   ><span v-if="scope.row.isUploading === 4"
-                    >加载中...</span
+                    >大文件请耐心等待...</span
                   ></el-button>
                 <el-button
                   type="warning"
@@ -277,6 +277,8 @@ export default {
             // 递归上传所有分块
             const upload = (j) => {
               if (j >= total) return;
+              // 进入加载状态
+              if(j === total - 1) this.isUploading.splice(i, 1, 4);
               let form = {
                 id: this.md5_arr[i].file_md5,
                 md5_val: "0",

@@ -44,7 +44,12 @@ export default{
         return imgSuffix.indexOf(fileSuffix.toLowerCase()) !== -1
     },
     isVideo: (fileName)=>{
-        const imgSuffix = ['.mp4', '.avi', '.flv', '.mov']
+        const imgSuffix = ['.mp4'] // , '.avi', '.flv', '.mov'
+        const fileSuffix = fileName.substr(fileName.lastIndexOf('.'))
+        return imgSuffix.indexOf(fileSuffix.toLowerCase()) !== -1
+    },
+    isPPT: (fileName)=>{
+        const imgSuffix = ['.ppt'] // , '.avi', '.flv', '.mov'
         const fileSuffix = fileName.substr(fileName.lastIndexOf('.'))
         return imgSuffix.indexOf(fileSuffix.toLowerCase()) !== -1
     },

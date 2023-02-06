@@ -23,62 +23,70 @@
             v-if="scope.row.isFolder"
             style="width: 30px; height: 30px; margin-top: 8px"
             :src="require('../assets/icon/folder.png')"
+            :title="'文件夹'"
           >
           </el-image>
           <el-image
             v-else-if="$FileType.isApk(scope.row.f_name)"
-            style="width: 35px; height: 35px; margin-top: 8px"
             :src="require('../assets/icon/apk.png')"
+            :title="'apk文件'"
+          ></el-image>
+          <el-image
+              v-else-if="$FileType.isPPT(scope.row.f_name)"
+              :src="require('../assets/icon/ppt.png')"
+              :title="'ppt文档(双击可预览)'"
           ></el-image>
           <el-image
             v-else-if="$FileType.isCode(scope.row.f_name)"
-            style="width: 35px; height: 35px; margin-top: 8px"
             :src="require('../assets/icon/code.png')"
+            :title="'代码文件(双击可预览)'"
           ></el-image>
           <el-image
             v-else-if="$FileType.isImg(scope.row.f_name)"
-            style="width: 35px; height: 35px; margin-top: 8px"
-            :src="require('../assets/icon/image.png')"
+            fit:cover
+            :src="scope.row.preview_url"
+            :title="'图片文件(双击可预览)'"
           ></el-image>
           <el-image
             v-else-if="$FileType.isPdf(scope.row.f_name)"
-            style="width: 35px; height: 35px; margin-top: 8px"
             :src="require('../assets/icon/pdf.png')"
+            :title="'pdf文档(双击可预览)'"
           ></el-image>
           <el-image
             v-else-if="$FileType.isWord(scope.row.f_name)"
-            style="width: 35px; height: 35px; margin-top: 8px"
             :src="require('../assets/icon/word.png')"
+            :title="'word文档(双击可预览)'"
           ></el-image>
           <el-image
             v-else-if="$FileType.isExcel(scope.row.f_name)"
-            style="width: 35px; height: 35px; margin-top: 8px"
             :src="require('../assets/icon/excel.png')"
+            :title="'excel文档(双击可预览)'"
           ></el-image>
           <el-image
             v-else-if="$FileType.isCompress(scope.row.f_name)"
-            style="width: 35px; height: 35px; margin-top: 8px"
             :src="require('../assets/icon/compress.png')"
+            :title="'压缩文件(双击可预览)'"
           ></el-image>
           <el-image
               v-else-if="$FileType.isMusic(scope.row.f_name)"
-              style="width: 35px; height: 35px; margin-top: 8px"
               :src="require('../assets/icon/music.png')"
+              :title="'音频文件(双击可预览)'"
           ></el-image>
           <el-image
               v-else-if="$FileType.isVideo(scope.row.f_name)"
-              style="width: 25px; height: 25px; margin-top: 8px;margin-left: 6px"
-              :src="require('../assets/icon/vedio.png')"
+              fit:cover
+              :src="scope.row.preview_url"
+              :title="'视频文件(双击可预览)'"
           ></el-image>
           <el-image
               v-else-if="$FileType.isExe(scope.row.f_name)"
-              style="width: 25px; height: 25px; margin-top: 8px;margin-left: 6px"
               :src="require('../assets/icon/exe.png')"
+              :title="'可执行文件'"
           ></el-image>
           <el-image
             v-else
-            style="width: 35px; height: 35px; margin-top: 8px"
             :src="require('../assets/icon/other.png')"
+            :title="'其他文件'"
           ></el-image>
         </template>
       </el-table-column>
@@ -318,6 +326,7 @@ export default {
           f_size: "",
           isFolder: false,
           isEdit: false,
+          preview_url: '',
         };
         res.uid = e.uid;
         res.fid = e.fid;
@@ -327,6 +336,7 @@ export default {
         res.f_size = e.f_size;
         res.isFolder = e.folder;
         res.isEdit = false;
+        res.preview_url = e.preview_url
         resArr.push(res);
       });
 
@@ -669,6 +679,14 @@ export default {
       });
     },
     preview(rowData){
+      // 全局加载
+      const loading = this.$loading({
+        lock: true,
+        text: '加载中...如果文件较大这可能需要一段时间......',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+
       this.$http({
         method: 'POST',
         headers: {
@@ -681,8 +699,24 @@ export default {
       }).then((res)=>{
         if(res.status === 200){
           if(res.data.status === 200){
+            loading.close();
+
             window.open("http://127.0.0.1:8012/onlinePreview?url=" + encodeURIComponent(btoa("http://127.0.0.1:8012/" + res.data.data)))
           }
+          else{
+            loading.close();
+            this.$message({
+              type: "error",
+              message: "未知错误！"
+            })
+          }
+        }
+        else{
+          loading.close();
+          this.$message({
+            type: "error",
+            message: "未知错误！"
+          })
         }
       })
     },
@@ -712,5 +746,11 @@ export default {
   display: flex;
   justify-content: center; /*垂直居中*/
   align-items: center;
+}
+.el-image{
+  width: 35px;
+  height: 35px;
+  margin-top: 8px;
+  border-radius: 5px;
 }
 </style>
