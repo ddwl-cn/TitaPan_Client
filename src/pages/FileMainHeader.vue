@@ -9,7 +9,7 @@
         :http-request="handleUploadFile"
         :on-change="handleSelect"
         :auto-upload="false"
-        :limit="10"
+        :limit="30"
         :show-file-list="false"
       >
         <el-button
@@ -397,6 +397,7 @@ export default {
                       type: "warning",
                       message: "当前目录下有重名文件!",
                     });
+                    this.isUploading.splice(i, 1, 5)
                   } else {
                     this.$message({
                       type: "error",

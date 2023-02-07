@@ -35,4 +35,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.el-container{
+  border-radius: 10px;
+}
+
+</style>

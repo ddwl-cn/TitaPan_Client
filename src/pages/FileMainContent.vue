@@ -183,7 +183,6 @@
                   v-model="shareForm.share_code"
                   style="width: 180px; margin-left: 50px"
                   maxlength="6"
-                  minlength="6"
                   placeholder="请输入6位分享码"
                 />&ensp;仅包含数字和字母
               </el-form-item>
