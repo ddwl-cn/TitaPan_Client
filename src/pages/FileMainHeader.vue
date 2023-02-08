@@ -17,9 +17,8 @@
           size="mini"
           type="success"
           round
-          style="margin-right: 10px"
-          >在当前目录上传文件</el-button
-        >
+          style="margin-right: 10px;margin-top: 10px"
+          >在当前目录上传文件</el-button>
 
         <el-button
           type="success"
@@ -73,6 +72,14 @@
                 ></el-progress>
               </template>
             </el-table-column>
+<!--            <el-table-column-->
+<!--              property=""-->
+<!--              label="预计还要"-->
+<!--              width="100"-->
+<!--              style="height: 15px"-->
+<!--              align="center">-->
+<!--              {{planTime}}-->
+<!--            </el-table-column>-->
             <el-table-column
               property=""
               label="操作"
@@ -104,7 +111,7 @@
                     v-if="
                       scope.row.isUploading === 0 || scope.row.isUploading === 2
                     "
-                    >上传</span
+                    >继续上传</span
                   ><span v-if="scope.row.isUploading === 4"
                     >大文件请耐心等待...</span
                   ></el-button>
@@ -153,6 +160,12 @@ export default {
     return {
       // 文件上传列表对话框
       dialogTableVisible: false,
+      // // 网速（数字）
+      // uploadSpeedKb: 0,
+      // // 当前网速（字符）
+      // uploadSpeed: '',
+      // linkSpeedTimer: null,
+      // planTime: '',
       // 已选择行
       rowSelected: [],
       uuid: 0,
@@ -185,6 +198,14 @@ export default {
     },
   },
   methods: {
+    // 计算当前网速
+    computeNetSpeed() {
+      this.uploadSpeedKb = (navigator.connection.downlink * 1024) / 8;
+      this.uploadSpeed =
+          (navigator.connection.downlink * 1024) / 8 > 1024
+              ? (navigator.connection.downlink * 1024) / 8 / 1024 + "m/s"
+              : (navigator.connection.downlink * 1024) / 8 + "kb/s";
+    },
     getRowsSelected() {
       return this.$parent.$parent.$parent.getRowsSelected();
     },
@@ -236,7 +257,7 @@ export default {
     handleUploadFile(i) {
       if (this.isUploading[i] === 1 || this.isUploading[i] === 3) return;
 
-      const std_chunk_size = 1024 * 1024 * 30; // 30MB 文件块
+      const std_chunk_size = 1024 * 1024 * 5; // 30MB 文件块
 
       let file = this.file_arr[i].blob;
       // 总共要分几块
@@ -318,16 +339,29 @@ export default {
                       method: "POST",
                       url: "/upload/commonUpload",
                       onUploadProgress: (progressEvent) => {
+                        // 表单数据大小
                         let formSize =
                             progressEvent.total - this.file_chunk_arr[i][j].size;
-                        let loaded = std_chunk_size * j;
+                        // 先前已上传的总大小
+                        let loaded = std_chunk_size * j + progressEvent.loaded;
+                        // 总共的大小
+                        let totalSize = file.size + formSize * total;
+                        // 剩余的大小
+                        let last = totalSize - loaded;
                         this.percentage.splice(
                             i,
                             1,
-                            ((loaded + progressEvent.loaded) /
-                                (file.size + formSize * total)) *
-                            100
+                            (loaded / totalSize) * 100
                         );
+                        // this.computeNetSpeed();
+                        // let totalSeconds = last / (this.uploadSpeedKb*1024); // 总秒数
+                        // console.log(last, "...", this.uploadSpeedKb, "...", this.uploadSpeed, "...", totalSeconds)
+                        // let h = Math.floor(totalSeconds / 60 / 60) + "时";
+                        // totalSeconds -= h*60*60;
+                        // let m = Math.floor(totalSeconds / 60) + "分";
+                        // totalSeconds -= m*60;
+                        // let s = totalSeconds + "秒";
+                        // this.planTime = h + m + s;
                       },
                       data: form,
                     }).then((res) => {
@@ -546,7 +580,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .el-header {
   text-align: center;
   line-height: 20px;

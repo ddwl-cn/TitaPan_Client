@@ -1,6 +1,5 @@
 <template>
-  <div class="login" clearfix>
-    <div class="login-wrap">
+  <el-container class="login login-wrap shadow-container">
       <el-row type="flex" justify="center">
         <el-form
           ref="loginForm"
@@ -47,8 +46,7 @@
           </el-form-item>
         </el-form>
       </el-row>
-    </div>
-  </div>
+    </el-container>
 </template>
 
 <script scoped>
@@ -120,7 +118,7 @@ export default {
 <style scoped>
 .login {
   width: 100%;
-  height: 800px;
+  height: 750px;
   /* background: url("../assets/images/bg1.png") no-repeat; */
   background-size: cover;
   overflow: hidden;
@@ -130,11 +128,19 @@ export default {
   /*background: url("../assets/images/login_bg.png") no-repeat;*/
   background-size: cover;
   width: 400px;
-  height: 500px;
+  height: 400px;
   margin: 215px auto;
+  margin-top: 150px;
   overflow: hidden;
   padding-top: 10px;
   line-height: 40px;
+}
+.shadow-container {
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+.el-row{
+  margin-left: 40px;
 }
 #password {
   margin-bottom: 5px;
@@ -157,6 +163,6 @@ a:hover {
 }
 .el-button {
   width: 80%;
-  margin-left: -50px;
+  margin-top: 10px;
 }
 </style>

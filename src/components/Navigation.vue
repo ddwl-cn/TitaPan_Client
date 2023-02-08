@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-menu>
-      <el-container class="is-vertical">
+      <el-container class="is-vertical shadow-container">
       <router-link to="/user/home">
         <template slot="title">主页</template>
         <el-menu-item index="1">主页</el-menu-item>
@@ -22,22 +22,21 @@
       <el-menu-item index="4">文件广场</el-menu-item>
   </el-container>
     </el-menu>
-    <el-container class="is-vertical" >
-      <div v-if="isHome()">
+<!--    <el-container class="is-vertical shadow-container" style="margin-top: 50px;height: 50px">-->
       <el-upload
-          class="upload-demo"
+          class="upload-demo shadow-container"
           drag
-          style="width: 200px;margin-top: 50px"
+          style="width: 200px;margin-top: 192px"
           action=""
           :on-change="onChange"
           :auto-upload="false"
           :show-file-list="false"
+          v-if="isHome()"
           multiple>
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
       </el-upload>
-      </div>
-    </el-container>
+<!--    </el-container>-->
   </div>
 </template>
 
@@ -53,8 +52,9 @@ export default {
       var vc = this.$parent.$parent.$parent.$children[1].$children[1].$children[0].$children[0].$children[0].$children[0].$children[0]
       // 借用FileMainHeader中的上传方法即可
       vc.handleSelect(file, fileList);
+      console.log(this.$children[1])
       // 将el-upload中的文件列表 fileList 重置
-      this.$children[1].$children[0].clearFiles();
+      this.$children[1].clearFiles();
     },
   },
 };
@@ -64,8 +64,9 @@ export default {
 .router-link-active {
   text-decoration: none;
 }
-.el-container{
-
+.shadow-container {
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 }
 .el-menu-item{
 
@@ -75,9 +76,11 @@ export default {
 }
 /deep/ .el-upload{
   width: 100%;
+
 }
 /deep/ .el-upload .el-upload-dragger{
   width: 100%;
+  border-style: none;
 }
 a {
   text-decoration: none;

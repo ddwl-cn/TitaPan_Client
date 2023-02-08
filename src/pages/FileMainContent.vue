@@ -12,8 +12,10 @@
       :default-sort="{ prop: 'f_size' }"
       @select="handleSelect"
       @select-all="handleSelectAll"
-      style="width: 100%;margin-top: 10px"
+      style="width: 100%;margin-top: 10px;border-radius: 15px"
       @row-dblclick="preview"
+      v-loading="loadingData"
+      element-loading-text="数据加载中，请稍等......"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
 
@@ -252,6 +254,8 @@ export default {
   name: "FileMainContent",
   data() {
     return {
+      // 加载中
+      loadingData: false,
       /* 表单内嵌dialog会出现scope传值一直为列表最后一个元素的bug 暂时不知道怎么解决 引入额外的变量进行传值*/
       temp: "",
       rowsSelected: [],
@@ -276,26 +280,30 @@ export default {
   },
   methods: {
     getUserFileList() {
+      this.loadingData = true;
       this.$http({
         method: "GET",
         url: "/user/getUserFileList",
-      })
-        .then((res) => {
-          if (res.status === 200 && res.data.data)
-            this.userFiles = this.handleFileData(res.data.data);
-          else if(!res.headers.data){
-            this.$message({
-              type: "error",
-              message: "未知错误!",
-            });
-          }
-        })
-        .catch((e) => {
-          this.$message({
-            type: "error",
-            message: e,
-          });
-        });
+      }).then((res) => {
+            if (res.status === 200 && res.data.data) {
+              this.userFiles = this.handleFileData(res.data.data);
+              this.loadingData = false;
+            }
+            else if(!res.headers.data){
+              this.$message({
+                type: "error",
+                message: "未知错误!",
+              });
+              this.loadingData = false;
+            }
+          }).catch((e) => {
+                this.$message({
+                  type: "error",
+                  message: e,
+                  });
+                this.loadingData = false;
+          })
+
     },
     changeFileSize(file) {
       var fileSizeByte = file.f_size;
@@ -719,6 +727,20 @@ export default {
         }
       })
     },
+    beforeunloadHandler(){
+      this._beforeUnload_time=new Date().getTime();
+    },
+    unloadHandler(e){
+      this._gap_time = new Date().getTime() - this._beforeUnload_time;
+      // debugger
+      //判断是窗口关闭还是刷新
+      if(this._gap_time<=5){
+          this.$http({
+            url: '/user/resetUserPath',
+            method: 'get',
+          })
+        }
+      }
   },
   mounted() {
     // 等待页面渲染完毕 发送请求
@@ -726,6 +748,14 @@ export default {
       // 发送请求获取用户文件列表
       this.getUserFileList();
     });
+
+    window.addEventListener('beforeunload', e => this.beforeunloadHandler(e))
+    window.addEventListener('unload', e => this.unloadHandler(e))
+
+  },
+  destroyed() {
+    window.removeEventListener('beforeunload', e => this.beforeunloadHandler(e))
+    window.removeEventListener('unload', e => this.unloadHandler(e))
   },
   computed: {
     fileList() {

@@ -4,7 +4,7 @@
     class="is-vertical total"
   >
     <!-- 头部 -->
-    <el-header height="40px" style="text-align: right; font-size: 12px">
+    <el-header height="100px" style="text-align: right; font-size: 12px">
       <Header></Header>
     </el-header>
     <el-container>
