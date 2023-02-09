@@ -368,9 +368,14 @@ export default {
     },
     cancelChange(rowData) {
       rowData.isEdit = false;
+      // 新建目录取消后过滤掉该目录
       this.userFiles = this.userFiles.filter((item) => {
         return item.old_f_name !== "";
       });
+      // 修改文件名取消后 保留原有文件名
+      this.userFiles.forEach((item)=>{
+        item.f_name = item.old_f_name;
+      })
     },
     saveFileName(rowData) {
       if (rowData.f_name === "") {
@@ -384,6 +389,7 @@ export default {
         this.$set(rowData, "isEdit", false);
         return;
       }
+
       if (
         this.getFileSuffix(rowData.f_name) !==
           this.getFileSuffix(rowData.old_f_name) &&
@@ -401,6 +407,7 @@ export default {
               params: {
                 oldName: rowData.old_f_name,
                 newName: rowData.f_name,
+                isFolder: false,
               },
             }).then((res) => {
               // 修改成功
@@ -437,6 +444,7 @@ export default {
           params: {
             oldName: rowData.old_f_name,
             newName: rowData.f_name,
+            isFolder: true,
           },
         }).then((res) => {
           // 修改成功
