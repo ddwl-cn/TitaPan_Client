@@ -27,10 +27,10 @@
           </el-form-item>
           <router-link to="/">找回密码</router-link>&ensp;
           <router-link to="/registry">注册账号</router-link>
+
           <el-form-item>
             <el-button type="primary" icon="el-icon-upload" @click="doLogin()"
-              >登 录</el-button
-            >
+              >登 录</el-button>
           </el-form-item>
         </el-form>
       </el-row>

@@ -12,7 +12,7 @@
       :default-sort="{ prop: 'f_size' }"
       @select="handleSelect"
       @select-all="handleSelectAll"
-      style="width: 100%;margin-top: 10px;border-radius: 15px"
+      style="width: 100%;margin-top: 10px;border-radius: 15px;"
       @row-dblclick="preview"
       v-loading="loadingData"
       element-loading-text="数据加载中，请稍等......"
@@ -237,7 +237,7 @@
             type="warning"
             icon="el-icon-download"
             size="mini"
-            v-show="!scope.row.isEdit && !scope.row.isFolder"
+            v-show="!scope.row.isEdit"
             @click="downloadFile(scope.row)"
           ></el-button>
           </div>
@@ -408,6 +408,7 @@ export default {
                 // 更新成功
                 rowData.old_f_name = rowData.f_name;
                 this.$set(rowData, "isEdit", false);
+                this.getUserFileList();
               } else if (res.data.msg === "fileNameRepetitive") {
                 // 重名不能修改
                 rowData.f_name = rowData.old_f_name;
@@ -443,6 +444,7 @@ export default {
             // 更新成功
             rowData.old_f_name = rowData.f_name;
             this.$set(rowData, "isEdit", false);
+            this.getUserFileList();
           } else if (res.data.msg === "fileNameRepetitive") {
             // 重名不能修改
             rowData.f_name = rowData.old_f_name;
@@ -538,7 +540,7 @@ export default {
       })
         .then((res) => {
           // 创建写入流 filename为下载的文件名
-          const fileStream = streamSaver.createWriteStream(rowData.old_f_name, {
+          const fileStream = streamSaver.createWriteStream((rowData.old_f_name + (rowData.isFolder ? ".zip" : "")), {
             size: res.headers.get("content-length"),
           });
           const readableStream = res.body;
@@ -563,9 +565,27 @@ export default {
         });
     },
     downloadSelected(rows) {
+      var flag = false;
       rows.forEach((item) => {
-        this.downloadFile(item);
+        if(item.isFolder) flag = true;
       });
+      if(flag) {
+        this.$confirm("所选下载文件包含文件夹，文件夹将以压缩包(.zip)格式返回, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }).then(() => {
+          rows.forEach((item) => {
+            this.downloadFile(item);
+          });
+        })
+      }
+      else{
+        rows.forEach((item) => {
+          this.downloadFile(item);
+        });
+      }
+
     },
     createFolder() {
       let res = {

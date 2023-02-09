@@ -15,7 +15,7 @@
         )
       "
         :default-sort="{ prop: 'f_name' }"
-        style="width: 100%"
+        style="width: 100%;border-radius: 15px;"
     >
       <el-table-column
           label="文件名"

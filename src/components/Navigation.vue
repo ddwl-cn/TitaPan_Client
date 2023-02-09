@@ -1,11 +1,13 @@
 <template>
-  <div>
+  <el-container>
     <el-menu>
-      <el-container class="is-vertical shadow-container">
-      <router-link to="/user/home">
+<!--      <el-container class="is-vertical shadow-container">-->
+        <el-card shadow="hover">
+      <router-link to="/user/home" >
         <template slot="title">主页</template>
         <el-menu-item index="1">主页</el-menu-item>
       </router-link>
+        </el-card>
 
       <!-- <router-link to="/user/extract/:share_uuid/:share_code">
         <template slot="title">提取文件</template>
@@ -13,20 +15,26 @@
         <el-menu-item index="2">提取文件</el-menu-item>
       </router-link> -->
 
+        <el-card shadow="hover">
       <router-link to="/user/share">
         <template slot="title">分享链接管理</template>
         <el-menu-item index="3">分享链接管理</el-menu-item>
       </router-link>
-
+        </el-card>
+        <el-card shadow="hover">
+        <router-link to="/user/share">
       <template slot="title">文件广场</template>
       <el-menu-item index="4">文件广场</el-menu-item>
-  </el-container>
+        </router-link>
+        </el-card>
+<!--  </el-container>-->
     </el-menu>
 <!--    <el-container class="is-vertical shadow-container" style="margin-top: 50px;height: 50px">-->
-      <el-upload
+    <el-footer>
+    <el-upload
           class="upload-demo shadow-container"
           drag
-          style="width: 200px;margin-top: 192px"
+          style="width: 200px;margin-top: 159px;margin-left: -20px"
           action=""
           :on-change="onChange"
           :auto-upload="false"
@@ -36,8 +44,9 @@
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
       </el-upload>
-<!--    </el-container>-->
-  </div>
+    </el-footer>
+    <!--    </el-container>-->
+  </el-container>
 </template>
 
 <script>
@@ -69,10 +78,17 @@ export default {
   border-radius: 10px;
 }
 .el-menu-item{
-
+  width: 100%;
+  margin-top: -25px;
+}
+/*浏览器中寻找 修改一级导航栏浮动颜色*/
+.el-submenu__title:hover, .el-menu-item:focus, .el-menu-item:hover{
+  background-color: white;
 }
 .el-menu{
-  border-radius: 10px;
+  border-style: none;
+  border-radius: 15px;
+  background-color: #f8f8f8;
 }
 /deep/ .el-upload{
   width: 100%;
@@ -82,6 +98,14 @@ export default {
   width: 100%;
   border-style: none;
 }
+.el-card{
+  width: 99%;
+  height: 45px;
+  margin-bottom: 20px;
+}
+/*.el-card :hover{*/
+/*  background-color: RGB(237,245,254);*/
+/*}*/
 a {
   text-decoration: none;
   color: black;

@@ -15,7 +15,16 @@
               placeholder="请输入用户名"
               prefix-icon
             ></el-input>
+
           </el-form-item>
+          <el-form-item id="nike_name" prop="nike_name" label="昵称">
+          <el-input
+              v-model="userInfo.nike_name"
+              placeholder="请输入用户昵称"
+              prefix-icon
+          ></el-input>
+          </el-form-item>
+
           <el-form-item id="password" prop="password" label="密码">
             <el-input
               v-model="userInfo.u_password"
@@ -41,8 +50,7 @@
               type="primary"
               icon="el-icon-upload"
               @click="doRegistry()"
-              >注 册</el-button
-            >
+              >注 册</el-button>
           </el-form-item>
         </el-form>
       </el-row>
@@ -60,6 +68,7 @@ export default {
         u_name: "",
         u_password: "",
         r_password: "",
+        nike_name: "",
       },
     };
   },
@@ -128,9 +137,9 @@ export default {
   /*background: url("../assets/images/login_bg.png") no-repeat;*/
   background-size: cover;
   width: 400px;
-  height: 400px;
+  height: 500px;
   margin: 215px auto;
-  margin-top: 150px;
+  margin-top: 100px;
   overflow: hidden;
   padding-top: 10px;
   line-height: 40px;
