@@ -20,7 +20,7 @@
 <!--              <el-link class="text item" style="display: block; text-align: center">-->
 <!--                上传头像-->
 <!--              </el-link>-->
-              <el-button type="danger" style="margin-left: 45px;" icon="el-icon-switch-button" size="mini">登出</el-button>
+              <el-button type="danger" style="margin-left: 45px;" icon="el-icon-switch-button" size="mini" @click="logout()">登出</el-button>
             </el-card>
         </el-popover>
       </div>
@@ -80,7 +80,8 @@ export default {
   width: 103%;
   margin-left: -20px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
-
+  /*background-image: url(../assets/background.jpg);*/
+  /*background-size: cover;*/
 }
 .avatar-right{
   text-align:right;

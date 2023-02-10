@@ -41,6 +41,7 @@ export default {
       // 用户当前所在路径 默认在根路径
       userPath: JSON.parse(sessionStorage.getItem("userPath")) || ["/"],
       position: parseInt(sessionStorage.getItem("position")) || 0,
+
     }
   },
   methods: {
@@ -58,10 +59,7 @@ export default {
         return;
       }
       this.position--;
-      this.requestChangePath(this.userPath[this.position]);
-      this.userPath.length = this.position + 1;
-      sessionStorage.setItem("position", this.position.toString());
-      sessionStorage.setItem("userPath", JSON.stringify(this.userPath));
+      this.requestChangePath(this.userPath[this.position], false);
     },
     // 弃用
     next() {
@@ -74,19 +72,16 @@ export default {
       sessionStorage.setItem("userPath", JSON.stringify(this.userPath));
     },
     // 传来下一级的文件名称
-    toPath(nextPath) {
-      this.userPath.push(this.userPath[this.position] + nextPath + "/");
-      this.position += 1;
-      // 保存路径到本地session存储 确保刷新后任然在当前目录下
-      sessionStorage.setItem("position", this.position.toString());
-      sessionStorage.setItem("userPath", JSON.stringify(this.userPath));
-      this.requestChangePath(this.userPath[this.position]);
+    toPath(folderName) {
+      var destPath = this.userPath[this.position] + folderName + "/";
+      this.requestChangePath(destPath, true);
+
     },
     getUserPath() {
       return this.userPath[this.position];
     },
     // 向后端发送更改路径请求 同时重新更新文件列表
-    requestChangePath(path) {
+    requestChangePath(path, LastOrNext) {
       this.$http({
         method: "post",
         url: "/user/toPath",
@@ -98,7 +93,20 @@ export default {
           if (res.data.msg === "changePathSuccess") {
             // 重新获取当前目录下的文件列表
             this.$parent.$parent.$parent.$parent.getUserFileList();
-          } else {
+            if(LastOrNext){
+              this.userPath.push(path);
+              this.position += 1;
+              // 保存路径到本地session存储 确保刷新后任然在当前目录下
+              sessionStorage.setItem("position", this.position.toString());
+              sessionStorage.setItem("userPath", JSON.stringify(this.userPath));
+            }
+            else{
+              this.userPath.length = this.position + 1;
+              sessionStorage.setItem("position", this.position.toString());
+              sessionStorage.setItem("userPath", JSON.stringify(this.userPath));
+            }
+          }
+          else {
             this.$message({
               type: "error",
               message: "路径错误!",

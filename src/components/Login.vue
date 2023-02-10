@@ -72,9 +72,10 @@ export default {
         },
         data: this.userInfo,
       }).then((response) => {
-        this.$message({
-          type: "success",
-          message: "欢迎!",
+        this.$notify({
+          title: 'Tita！',
+          message: this.$createElement('i', { style: 'color: teal'}, '这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n'),
+          duration: 0
         });
         // 把token存入本地存储
         localStorage.setItem("token", response.headers.token);

@@ -12,7 +12,7 @@
       :default-sort="{ prop: 'f_size' }"
       @select="handleSelect"
       @select-all="handleSelectAll"
-      style="width: 100%;margin-top: 10px;border-radius: 15px;"
+      style="width: 100%; margin-top: 10px;border-radius: 15px;"
       @row-dblclick="preview"
       v-loading="loadingData"
       element-loading-text="数据加载中，请稍等......"
@@ -714,6 +714,7 @@ export default {
       });
     },
     preview(rowData){
+      if(rowData.isFolder) return;
       // 全局加载
       const loading = this.$loading({
         lock: true,
