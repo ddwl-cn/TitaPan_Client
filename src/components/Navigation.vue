@@ -1,30 +1,33 @@
 <template>
   <el-container>
-    <el-menu>
+    <el-menu @select="menuSelected">
 <!--      <el-container class="is-vertical shadow-container">-->
         <el-card shadow="hover">
       <router-link to="/user/home" >
-        <template slot="title">主页</template>
-        <el-menu-item index="1">主页</el-menu-item>
+        <template slot="title">我的文件</template>
+        <el-menu-item index="1">
+          <el-image
+              style="width: 30px; height: 30px; margin-right: 5px;margin-bottom: 2px"
+              :src="require('../assets/icon/'+selected_icon[0][switches[index][0]])"></el-image>我的文件</el-menu-item>
       </router-link>
         </el-card>
-
-      <!-- <router-link to="/user/extract/:share_uuid/:share_code">
-        <template slot="title">提取文件</template>
-
-        <el-menu-item index="2">提取文件</el-menu-item>
-      </router-link> -->
 
         <el-card shadow="hover">
       <router-link to="/user/share">
-        <template slot="title">分享链接管理</template>
-        <el-menu-item index="3">分享链接管理</el-menu-item>
+        <template slot="title">我的分享</template>
+        <el-menu-item index="2" >
+          <el-image
+            style="width: 30px; height: 30px; margin-right: 5px;margin-bottom: 2px"
+            :src="require('../assets/icon/'+selected_icon[1][switches[index][1]])"></el-image>我的分享</el-menu-item>
       </router-link>
         </el-card>
         <el-card shadow="hover">
-        <router-link to="/user/share">
+        <router-link to="/user/fileSquare">
       <template slot="title">文件广场</template>
-      <el-menu-item index="4">文件广场</el-menu-item>
+      <el-menu-item index="3">
+        <el-image
+          style="width: 30px; height: 30px; margin-right: 5px;margin-bottom: 2px"
+          :src="require('../assets/icon/'+selected_icon[2][switches[index][2]])"></el-image>文件广场</el-menu-item>
         </router-link>
         </el-card>
 <!--  </el-container>-->
@@ -52,6 +55,18 @@
 <script>
 export default {
   name: "Navigation",
+  data(){
+    return {
+      index: 0,
+      selected_icon: [
+        ["home.png", "home-selected.png"],
+        ["share.png", "share-selected.png"],
+        ["fileSquare.png", "fileSquare-selected.png"]
+      ],
+      // 四种状态
+      switches:[[0,0,0],[1,0,0],[0,1,0],[0,0,1]],
+    }
+  },
   components: {},
   methods: {
     isHome(){
@@ -65,6 +80,10 @@ export default {
       // 将el-upload中的文件列表 fileList 重置
       this.$children[1].clearFiles();
     },
+    // 菜单被激活
+    menuSelected(index){
+      this.index = index;
+    }
   },
 };
 </script>

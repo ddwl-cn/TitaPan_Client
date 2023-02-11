@@ -5,6 +5,7 @@ import Main from "../components/Main.vue"
 import Registry from "../components/Registry.vue"
 import ShareMain from "../pages/ShareMain.vue"
 import ExtractMain from "../pages/ExtractMain.vue"
+import FileSquare from "../pages/FileSquare.vue"
 
 export default new VueRouter({
   routes: [
@@ -54,6 +55,10 @@ export default new VueRouter({
         {
           path: "share",
           component: ShareMain,
+        },
+        {
+          path: "fileSquare",
+          component: FileSquare,
         },
       ],
     },

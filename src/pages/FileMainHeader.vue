@@ -257,7 +257,7 @@ export default {
     handleUploadFile(i) {
       if (this.isUploading[i] === 1 || this.isUploading[i] === 3) return;
 
-      const std_chunk_size = 1024 * 1024 * 5; // 30MB 文件块
+      const std_chunk_size = 1024 * 1024 * 5; // 5MB 文件块
 
       let file = this.file_arr[i].blob;
       // 总共要分几块
