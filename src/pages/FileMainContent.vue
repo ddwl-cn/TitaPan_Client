@@ -21,75 +21,145 @@
 
       <el-table-column width="55">
         <template slot-scope="scope">
-          <el-image
-            v-if="scope.row.isFolder"
-            style="width: 30px; height: 30px; margin-top: 8px"
-            :src="require('../assets/icon/folder.png')"
-            :title="'文件夹'"
-          >
-          </el-image>
-          <el-image
-            v-else-if="$FileType.isApk(scope.row.f_name)"
-            :src="require('../assets/icon/apk.png')"
-            :title="'apk文件'"
-          ></el-image>
-          <el-image
-              v-else-if="$FileType.isPPT(scope.row.f_name)"
-              :src="require('../assets/icon/ppt.png')"
-              :title="'ppt文档(双击可预览)'"
-          ></el-image>
-          <el-image
-            v-else-if="$FileType.isCode(scope.row.f_name)"
-            :src="require('../assets/icon/code.png')"
-            :title="'代码文件(双击可预览)'"
-          ></el-image>
-          <el-image
-            v-else-if="$FileType.isImg(scope.row.f_name)"
-            fit:cover
-            :src="scope.row.preview_url"
-            :title="'图片文件(双击可预览)'"
-          ></el-image>
-          <el-image
-            v-else-if="$FileType.isPdf(scope.row.f_name)"
-            :src="require('../assets/icon/pdf.png')"
-            :title="'pdf文档(双击可预览)'"
-          ></el-image>
-          <el-image
-            v-else-if="$FileType.isWord(scope.row.f_name)"
-            :src="require('../assets/icon/word.png')"
-            :title="'word文档(双击可预览)'"
-          ></el-image>
-          <el-image
-            v-else-if="$FileType.isExcel(scope.row.f_name)"
-            :src="require('../assets/icon/excel.png')"
-            :title="'excel文档(双击可预览)'"
-          ></el-image>
-          <el-image
-            v-else-if="$FileType.isCompress(scope.row.f_name)"
-            :src="require('../assets/icon/compress.png')"
-            :title="'压缩文件(双击可预览)'"
-          ></el-image>
-          <el-image
-              v-else-if="$FileType.isMusic(scope.row.f_name)"
-              :src="require('../assets/icon/music.png')"
-              :title="'音频文件(双击可预览)'"
-          ></el-image>
-          <el-image
-              v-else-if="$FileType.isVideo(scope.row.f_name)"
-              fit:cover
-              :src="scope.row.preview_url"
-              :title="'视频文件(双击可预览)'"
-          ></el-image>
-          <el-image
-              v-else-if="$FileType.isExe(scope.row.f_name)"
-              :src="require('../assets/icon/exe.png')"
-              :title="'可执行文件'"
-          ></el-image>
-          <el-image
-            v-else
-            :src="require('../assets/icon/other.png')"
-            :title="'其他文件'"
-          ></el-image>
+          <div class="image-container">
+            <img
+                v-if="scope.row.isFolder"
+                :src="require('../assets/icon/folder.png')"
+                :title="'文件夹'"
+            >
+            </img>
+            <img
+                v-else-if="$FileType.isApk(scope.row.f_name)"
+                :src="require('../assets/icon/apk.png')"
+                :title="'apk文件'"
+            />
+            <img
+                v-else-if="$FileType.isPPT(scope.row.f_name)"
+                :src="require('../assets/icon/ppt.png')"
+                :title="'ppt文档(双击可预览)'"
+            >
+            <img
+                v-else-if="$FileType.isCode(scope.row.f_name)"
+                :src="require('../assets/icon/code.png')"
+                :title="'代码文件(双击可预览)'"
+            >
+            <img
+                v-else-if="$FileType.isImg(scope.row.f_name)"
+                fit:cover
+                :src="scope.row.preview_url"
+                :title="'图片文件(双击可预览)'"
+            >
+            <img
+                v-else-if="$FileType.isPdf(scope.row.f_name)"
+                :src="require('../assets/icon/pdf.png')"
+                :title="'pdf文档(双击可预览)'"
+            >
+            <img
+                v-else-if="$FileType.isWord(scope.row.f_name)"
+                :src="require('../assets/icon/word.png')"
+                :title="'word文档(双击可预览)'"
+            >
+            <img
+                v-else-if="$FileType.isExcel(scope.row.f_name)"
+                :src="require('../assets/icon/excel.png')"
+                :title="'excel文档(双击可预览)'"
+            >
+            <img
+                v-else-if="$FileType.isCompress(scope.row.f_name)"
+                :src="require('../assets/icon/compress.png')"
+                :title="'压缩文件(双击可预览)'"
+            >
+            <img
+                v-else-if="$FileType.isMusic(scope.row.f_name)"
+                :src="require('../assets/icon/music.png')"
+                :title="'音频文件(双击可预览)'"
+            >
+            <img
+                v-else-if="$FileType.isVideo(scope.row.f_name)"
+                fit:cover
+                :src="scope.row.preview_url"
+                :title="'视频文件(双击可预览)'"
+            >
+            <img
+                v-else-if="$FileType.isExe(scope.row.f_name)"
+                :src="require('../assets/icon/exe.png')"
+                :title="'可执行文件'"
+            >
+            <img
+                v-else
+                :src="require('../assets/icon/other.png')"
+                :title="'其他文件'"
+            >
+<!--          <el-image-->
+<!--            v-if="scope.row.isFolder"-->
+<!--            style="width: 30px; height: 30px; margin-top: 8px"-->
+<!--            :src="require('../assets/icon/folder.png')"-->
+<!--            :title="'文件夹'"-->
+<!--          >-->
+<!--          </el-image>-->
+<!--          <el-image-->
+<!--            v-else-if="$FileType.isApk(scope.row.f_name)"-->
+<!--            :src="require('../assets/icon/apk.png')"-->
+<!--            :title="'apk文件'"-->
+<!--          ></el-image>-->
+<!--          <el-image-->
+<!--              v-else-if="$FileType.isPPT(scope.row.f_name)"-->
+<!--              :src="require('../assets/icon/ppt.png')"-->
+<!--              :title="'ppt文档(双击可预览)'"-->
+<!--          ></el-image>-->
+<!--          <el-image-->
+<!--            v-else-if="$FileType.isCode(scope.row.f_name)"-->
+<!--            :src="require('../assets/icon/code.png')"-->
+<!--            :title="'代码文件(双击可预览)'"-->
+<!--          ></el-image>-->
+<!--          <el-image-->
+<!--            v-else-if="$FileType.isImg(scope.row.f_name)"-->
+<!--            fit:cover-->
+<!--            :src="scope.row.preview_url"-->
+<!--            :title="'图片文件(双击可预览)'"-->
+<!--          ></el-image>-->
+<!--          <el-image-->
+<!--            v-else-if="$FileType.isPdf(scope.row.f_name)"-->
+<!--            :src="require('../assets/icon/pdf.png')"-->
+<!--            :title="'pdf文档(双击可预览)'"-->
+<!--          ></el-image>-->
+<!--          <el-image-->
+<!--            v-else-if="$FileType.isWord(scope.row.f_name)"-->
+<!--            :src="require('../assets/icon/word.png')"-->
+<!--            :title="'word文档(双击可预览)'"-->
+<!--          ></el-image>-->
+<!--          <el-image-->
+<!--            v-else-if="$FileType.isExcel(scope.row.f_name)"-->
+<!--            :src="require('../assets/icon/excel.png')"-->
+<!--            :title="'excel文档(双击可预览)'"-->
+<!--          ></el-image>-->
+<!--          <el-image-->
+<!--            v-else-if="$FileType.isCompress(scope.row.f_name)"-->
+<!--            :src="require('../assets/icon/compress.png')"-->
+<!--            :title="'压缩文件(双击可预览)'"-->
+<!--          ></el-image>-->
+<!--          <el-image-->
+<!--              v-else-if="$FileType.isMusic(scope.row.f_name)"-->
+<!--              :src="require('../assets/icon/music.png')"-->
+<!--              :title="'音频文件(双击可预览)'"-->
+<!--          ></el-image>-->
+<!--          <el-image-->
+<!--              v-else-if="$FileType.isVideo(scope.row.f_name)"-->
+<!--              fit:cover-->
+<!--              :src="scope.row.preview_url"-->
+<!--              :title="'视频文件(双击可预览)'"-->
+<!--          ></el-image>-->
+<!--          <el-image-->
+<!--              v-else-if="$FileType.isExe(scope.row.f_name)"-->
+<!--              :src="require('../assets/icon/exe.png')"-->
+<!--              :title="'可执行文件'"-->
+<!--          ></el-image>-->
+<!--          <el-image-->
+<!--            v-else-->
+<!--            :src="require('../assets/icon/other.png')"-->
+<!--            :title="'其他文件'"-->
+<!--          ></el-image>-->
+          </div>
         </template>
       </el-table-column>
       <el-table-column
@@ -167,35 +237,37 @@
             :title="'分享文件：' + temp.f_name"
             :visible.sync="dialogFormVisible"
             align="left"
-            width="450px"
+            width="500px"
           >
-            <el-form>
-              <el-form-item label="有效期" prop="valid">
-                <el-radio-group v-model="shareForm.valid">
-                  <el-radio label="1天"></el-radio>
-                  <el-radio label="7天"></el-radio>
-                  <el-radio label="30天"></el-radio>
-                  <el-radio label="永久"></el-radio>
-                </el-radio-group>
-              </el-form-item>
+            <el-card>
+              <el-form>
+                <el-form-item label="有效期" prop="valid">
+                  <el-radio-group v-model="shareForm.valid">
+                    <el-radio label="1天"></el-radio>
+                    <el-radio label="7天"></el-radio>
+                    <el-radio label="30天"></el-radio>
+                    <el-radio label="永久"></el-radio>
+                  </el-radio-group>
+                </el-form-item>
 
-              <el-form-item label="分享码" prop="share_code">
-                <el-input
-                  type="text"
-                  v-model="shareForm.share_code"
-                  style="width: 180px; margin-left: 50px"
-                  maxlength="6"
-                  placeholder="请输入6位分享码"
-                />&ensp;仅包含数字和字母
-              </el-form-item>
-            </el-form>
-
+                <el-form-item label="" prop="share_code">
+                  分享码：
+                  <el-input
+                    type="text"
+                    v-model="shareForm.share_code"
+                    style="width: 180px; padding-bottom: 10px"
+                    maxlength="6"
+                    placeholder="请输入6位分享码"
+                  />&ensp;仅包含数字和字母
+                </el-form-item>
+              </el-form>
+            </el-card>
             <div slot="footer" class="dialog-footer">
               <el-button @click="dialogFormVisible = false"
-                >取消</el-button
+              >取消</el-button
               >
               <el-button type="primary" @click="handleShare(temp)"
-                >创建分享链接</el-button
+              >创建分享链接</el-button
               >
             </div>
           </el-dialog>
@@ -806,9 +878,20 @@ export default {
   align-items: center;
 }
 .el-image{
-  width: 35px;
-  height: 35px;
+  width: 25px;
+  height: 25px;
   margin-top: 8px;
   border-radius: 5px;
+}
+.image-container {
+  width: 35px;
+  height: 35px;
+  overflow: hidden;
+  border-radius: 5px;
+}
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>

@@ -32,7 +32,7 @@
           prop="storage_path"
           style="height: 15px"
           sortable
-          width="150px"
+          width="320px"
           :show-overflow-tooltip="true"
       >
       </el-table-column>
@@ -64,7 +64,7 @@
           width="120px"
       >
       </el-table-column>
-      <el-table-column align="right" style="height: 15px" width="200px">
+      <el-table-column align="right" style="height: 15px" width="220px">
         <template slot="header">
           <el-input v-model="search" size="mini" placeholder="搜索指定文件"/>
         </template>

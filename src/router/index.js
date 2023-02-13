@@ -5,7 +5,8 @@ import Main from "../components/Main.vue"
 import Registry from "../components/Registry.vue"
 import ShareMain from "../pages/ShareMain.vue"
 import ExtractMain from "../pages/ExtractMain.vue"
-import FileSquare from "../pages/FileSquare.vue"
+import FileSquareMain from "../pages/FileSquareMain.vue"
+import FileInfoPage from "@/pages/FileInfoPage";
 
 export default new VueRouter({
   routes: [
@@ -58,7 +59,11 @@ export default new VueRouter({
         },
         {
           path: "fileSquare",
-          component: FileSquare,
+          component: FileSquareMain,
+        },
+        {
+          path: "fileInfoPage/:fid",
+          component: FileInfoPage,
         },
       ],
     },

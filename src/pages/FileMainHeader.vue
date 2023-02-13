@@ -14,7 +14,7 @@
       >
         <el-button
           slot="trigger"
-          size="mini"
+          size="small"
           type="success"
           round
           style="margin-right: 10px;margin-top: 10px"
@@ -22,7 +22,7 @@
 
         <el-button
           type="success"
-          size="mini"
+          size="small"
           round
           @click="dialogTableVisible = true"
           style="margin-right: 10px"
@@ -72,14 +72,6 @@
                 ></el-progress>
               </template>
             </el-table-column>
-<!--            <el-table-column-->
-<!--              property=""-->
-<!--              label="预计还要"-->
-<!--              width="100"-->
-<!--              style="height: 15px"-->
-<!--              align="center">-->
-<!--              {{planTime}}-->
-<!--            </el-table-column>-->
             <el-table-column
               property=""
               label="操作"
@@ -129,20 +121,20 @@
           </el-table>
         </el-dialog>
 
-        <el-button type="primary" round size="mini" @click="handleCreateFolder"
+        <el-button type="primary" round size="small" @click="handleCreateFolder"
           >新建文件夹</el-button
         >
         <el-button
           type="warning"
           round
-          size="mini"
+          size="small"
           @click="handleDownloadSelected"
           >下载已选</el-button
         >
         <el-button
           type="danger"
           round
-          size="mini"
+          size="small"
           @click="handleDeleteSelected"
           >删除已选</el-button
         >
@@ -160,19 +152,13 @@ export default {
     return {
       // 文件上传列表对话框
       dialogTableVisible: false,
-      // // 网速（数字）
-      // uploadSpeedKb: 0,
-      // // 当前网速（字符）
-      // uploadSpeed: '',
-      // linkSpeedTimer: null,
-      // planTime: '',
       // 已选择行
       rowSelected: [],
       uuid: 0,
       fileName_arr: [],
       // 文件数组
       file_arr: [],
-      // 是否正在在上传 0:未在上传 1: 正在上传 2: 暂停中 3: 完成
+      // 是否正在在上传 0:未在上传 1: 正在上传 2: 暂停中 3: 完成 4: 加载状态 5: 取消该文件的上传
       isUploading: [],
       // 每个文件的上传进度
       percentage: [],
@@ -198,14 +184,6 @@ export default {
     },
   },
   methods: {
-    // 计算当前网速
-    computeNetSpeed() {
-      this.uploadSpeedKb = (navigator.connection.downlink * 1024) / 8;
-      this.uploadSpeed =
-          (navigator.connection.downlink * 1024) / 8 > 1024
-              ? (navigator.connection.downlink * 1024) / 8 / 1024 + "m/s"
-              : (navigator.connection.downlink * 1024) / 8 + "kb/s";
-    },
     getRowsSelected() {
       return this.$parent.$parent.$parent.getRowsSelected();
     },
@@ -353,15 +331,6 @@ export default {
                             1,
                             (loaded / totalSize) * 100
                         );
-                        // this.computeNetSpeed();
-                        // let totalSeconds = last / (this.uploadSpeedKb*1024); // 总秒数
-                        // console.log(last, "...", this.uploadSpeedKb, "...", this.uploadSpeed, "...", totalSeconds)
-                        // let h = Math.floor(totalSeconds / 60 / 60) + "时";
-                        // totalSeconds -= h*60*60;
-                        // let m = Math.floor(totalSeconds / 60) + "分";
-                        // totalSeconds -= m*60;
-                        // let s = totalSeconds + "秒";
-                        // this.planTime = h + m + s;
                       },
                       data: form,
                     }).then((res) => {
