@@ -72,14 +72,26 @@ export default {
         },
         data: this.userInfo,
       }).then((response) => {
-        this.$notify({
-          title: 'Tita！',
-          message: this.$createElement('i', { style: 'color: teal'}, '这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n'),
-          duration: 0
-        });
-        // 把token存入本地存储
-        localStorage.setItem("token", response.headers.token);
-        this.$router.push("/user/home");
+        if(response.status===200) {
+          if(response.data.msg === "loginSuccess") {
+            this.$notify({
+              title: 'Tita！',
+              message: this.$createElement('i', {style: 'color: teal'}, '这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n'),
+              duration: 0
+            });
+            // 把token存入本地存储
+            localStorage.setItem("token", response.headers.token);
+            this.$router.push("/user/home");
+          }
+          else{
+            this.$message({
+              type: 'error',
+              message: "登录信息错误,请检查用户名或密码"
+            });
+            this.userInfo.u_name = '';
+            this.userInfo.u_password = '';
+          }
+        }
       });
     },
   },

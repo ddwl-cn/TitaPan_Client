@@ -38,7 +38,7 @@ export default {
         // 分页数目
         totalPages: null,
         // 当前页面
-        currentPage: null,
+        currentPage: 1,
         // 展示数量
         showNumber: null
       },
