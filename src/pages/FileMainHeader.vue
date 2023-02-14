@@ -222,9 +222,9 @@ export default {
         this.requestController.push(new AbortController());
         this.md5_arr.push({
           file_md5: "0",
-          chunk_md5: new Array(),
+          chunk_md5: [],
         });
-        this.file_chunk_arr.push(new Array());
+        this.file_chunk_arr.push([]);
       }
       // 选择后自动开始上传
       for(let i = 0; i < this.file_arr.length; i++)
@@ -250,8 +250,7 @@ export default {
         if (this.isUploading[i] === 2) flag = 1;
         this.isUploading[i] = 1; // 正在上传
         // 用于计算文件和分块的md5
-        let c_file_md5 = new SparkMD5();
-        let c_chunk_md5 = new SparkMD5();
+        let c_file_md5 = new SparkMD5.ArrayBuffer();
 
         let fr = new FileReader();
 
@@ -263,7 +262,7 @@ export default {
           const chunk = file.slice(start, end);
           start = end;
           if (flag === 0) this.file_chunk_arr[i].push(chunk);
-          fr.readAsBinaryString(chunk);
+          fr.readAsArrayBuffer(chunk);
           if (start >= file.size) return;
         };
         loadFile();
@@ -303,7 +302,6 @@ export default {
                 url: "/upload/checkFile",
                 data: form,
               }).then((res) => {
-
                 if(res.status === 200) {
                   if (res.data.msg === "commonUpload") {
                     // 传入文件数据
@@ -352,14 +350,16 @@ export default {
 
                         this.uploadTag.splice(i, 1, this.uploadTag[i] + 1);
                         upload(++j);
-                      } else {
+                      }
+                      else {
                         this.$message({
                           type: "error",
                           message: "未知错误!",
                         });
                       }
                     });
-                  } else if (res.data.msg === "quickUpload") {
+                  }
+                  else if (res.data.msg === "quickUpload") {
                     this.$http({
                       signal: this.requestController[i].signal,
                       headers: {
@@ -395,13 +395,15 @@ export default {
                         alert(res.data.msg);
                       }
                     });
-                  } else if (res.data.msg === "fileNameRepetitive") {
+                  }
+                  else if (res.data.msg === "fileNameRepetitive") {
                     this.$message({
                       type: "warning",
                       message: "当前目录下有重名文件!",
                     });
                     this.isUploading.splice(i, 1, 5)
-                  } else {
+                  }
+                  else {
                     this.$message({
                       type: "error",
                       message: "未知错误!",
@@ -425,10 +427,8 @@ export default {
           } else {
             // 变为正在计算md5的状态
             this.isUploading.splice(i, 1, 4);
-            c_file_md5.appendBinary(e.target.result);
-            c_chunk_md5.appendBinary(e.target.result);
-            this.md5_arr[i].chunk_md5.push(c_chunk_md5.end());
-            c_chunk_md5.reset();
+            c_file_md5.append(e.target.result);
+            this.md5_arr[i].chunk_md5.push(SparkMD5.ArrayBuffer.hash(e.target.result));
             loadFile();
           }
         };
