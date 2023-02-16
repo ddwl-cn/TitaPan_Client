@@ -391,8 +391,12 @@ export default {
 
                         this.uploadTag.splice(i, 1, this.uploadTag[i] + 1);
                         upload(++j);
-                      } else {
-                        alert(res.data.msg);
+                      }
+                      else {
+                        this.$message({
+                          type: "error",
+                          message: "未知错误!",
+                        });
                       }
                     });
                   }

@@ -47,19 +47,6 @@
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
       </el-upload>
-
-      <el-upload
-          class="upload-demo shadow-container"
-          drag
-          style="width: 200px;margin-top: 159px;margin-left: -20px"
-          action=""
-          :on-change="uploadPublicFileList"
-          :auto-upload="false"
-          :show-file-list="false"
-          v-if="isFileSquare()">
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">将文件拖到此处<em>分享给所有人</em></div>
-      </el-upload>
     </el-footer>
     <!--    </el-container>-->
   </el-container>
@@ -86,74 +73,12 @@ export default {
     isHome(){
       return this.$route.path.endsWith('home') || this.$route.path.endsWith('/');
     },
-    isFileSquare(){
-      return this.$route.path.endsWith('fileSquare');
-    },
     onChange(file, fileList){
       var vc = this.$parent.$parent.$parent.$children[1].$children[1].$children[0].$children[0].$children[0].$children[0].$children[0]
       // 借用FileMainHeader中的上传方法即可
       vc.handleSelect(file, fileList);
       // 将el-upload中的文件列表 fileList 重置
       this.$children[1].clearFiles();
-    },
-    uploadPublicFileList(file, fileList){
-      console.log(file)
-      const chunkSize = 1024*1024*2;  // 2 MB
-      const chunks = Math.ceil(file.size / chunkSize);
-      const spark = new SparkMD5.ArrayBuffer();
-      let loadedChunks = 0;
-
-      for (let i = 0; i < chunks; i++) {
-        const start = i * chunkSize;
-        const end = Math.min(start + chunkSize, file.size);
-        const chunk = file.raw.slice(start, end);
-
-        const chunkReader = new FileReader();
-        chunkReader.onload = (e)=> {
-          spark.append(e.target.result);
-          loadedChunks++;
-          if (loadedChunks === chunks) {
-            const result = spark.end();
-            let fileChunkInfo = {
-              original_file_name: file.name,
-              id: result,
-              md5_val: result,
-              chunk_size: file.size,
-              number: 0,
-              total: 1,
-              std_chunk_size: chunkSize,
-              mFile: file.raw,
-            }
-            console.log(this)
-            this.$http({
-              method: "POST",
-              url: "/public/uploadPublicFile",
-              headers: {
-                'Content-Type': 'multipart/form-data'
-              },
-              data:{
-                original_file_name: file.name,
-                id: result,
-                md5_val: result,
-                chunk_size: file.size,
-                number: 0,
-                total: 1,
-                std_chunk_size: chunkSize,
-                mFile: file.raw,
-                suffix: file.name.substr(file.name.lastIndexOf(".")),
-                f_description: "精美图片欣赏",
-              }
-            }).then((res)=>{
-              if(res.status === 200){
-                console.log(res.data.msg)
-                const vm = this.$parent.$parent.$children[1].$children[0].$children[0].$children[0];
-                vm.getPublicFileList(vm.data.currentPage)
-              }
-            })
-          }
-        };
-        chunkReader.readAsArrayBuffer(chunk);
-      }
     },
     // 菜单被激活
     menuSelected(index){

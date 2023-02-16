@@ -11,15 +11,8 @@ import router from "./router/index";
 Vue.use(ElementUi);
 Vue.use(VueRouter);
 Vue.config.productionTip = false;
-// 添加全局工具类
+
 Vue.prototype.$FileType = FileType;
-// 全局消息提示框
-Vue.prototype.$Tips = {
-  show: false,
-  id: 0,
-  type: ["success", "warning", "error"], // 0: success 1:warning 2: error
-  msg: "",
-};
 
 // 添加全局axios
 Vue.prototype.$http = axios;

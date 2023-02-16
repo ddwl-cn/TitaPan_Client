@@ -5,7 +5,7 @@
       <el-button style="float: right; padding-top: 20px" type="text">保存到网盘</el-button>
     </div>
     <div style="padding: 10px;">
-      <span><el-link :underline="false" type="info"><p>{{publicFileInfo.f_name}}</p></el-link></span>
+      <span><el-link :underline="false" type="info"><p>{{publicFileInfo.n_name}}</p></el-link></span>
       <div class="bottom clearfix">
         <p class="p-info">{{publicFileInfo.f_description}}</p>
 <!--        <span class="mini-font">下载量:{{publicFileInfo.downloads}}</span> <span class="mini-font">软件评分:{{publicFileInfo.score}}</span>-->
