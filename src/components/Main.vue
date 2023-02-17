@@ -1,6 +1,6 @@
 <template>
   <el-container
-    style="height: 650px; border: 1px solid #eee; margin-bottom: 0px"
+    style="height: 100%; margin-bottom: 0px"
     class="is-vertical total"
   >
     <!-- 头部 -->
@@ -9,7 +9,7 @@
     </el-header>
     <el-container>
       <!-- 内容：包含侧导航栏和内容区域 -->
-      <el-aside width="200px">
+      <el-aside width="200px" class="shadow-container">
         <Navigation></Navigation>
       </el-aside>
       <el-main style="padding: 5px">
@@ -35,9 +35,17 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .el-container{
   border-radius: 10px;
+
+}
+.el-aside{
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  height: 100%;
+  margin-top: 5px;
 }
 
 </style>

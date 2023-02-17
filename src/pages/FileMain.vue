@@ -55,5 +55,6 @@ export default {
 .el-container {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
   margin-bottom: 40px;
+  margin-left: 5px;
 }
 </style>

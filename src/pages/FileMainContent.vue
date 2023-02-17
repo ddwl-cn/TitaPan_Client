@@ -90,75 +90,6 @@
                 :src="require('../assets/icon/other.png')"
                 :title="'其他文件'"
             >
-<!--          <el-image-->
-<!--            v-if="scope.row.isFolder"-->
-<!--            style="width: 30px; height: 30px; margin-top: 8px"-->
-<!--            :src="require('../assets/icon/folder.png')"-->
-<!--            :title="'文件夹'"-->
-<!--          >-->
-<!--          </el-image>-->
-<!--          <el-image-->
-<!--            v-else-if="$FileType.isApk(scope.row.f_name)"-->
-<!--            :src="require('../assets/icon/apk.png')"-->
-<!--            :title="'apk文件'"-->
-<!--          ></el-image>-->
-<!--          <el-image-->
-<!--              v-else-if="$FileType.isPPT(scope.row.f_name)"-->
-<!--              :src="require('../assets/icon/ppt.png')"-->
-<!--              :title="'ppt文档(双击可预览)'"-->
-<!--          ></el-image>-->
-<!--          <el-image-->
-<!--            v-else-if="$FileType.isCode(scope.row.f_name)"-->
-<!--            :src="require('../assets/icon/code.png')"-->
-<!--            :title="'代码文件(双击可预览)'"-->
-<!--          ></el-image>-->
-<!--          <el-image-->
-<!--            v-else-if="$FileType.isImg(scope.row.f_name)"-->
-<!--            fit:cover-->
-<!--            :src="scope.row.preview_url"-->
-<!--            :title="'图片文件(双击可预览)'"-->
-<!--          ></el-image>-->
-<!--          <el-image-->
-<!--            v-else-if="$FileType.isPdf(scope.row.f_name)"-->
-<!--            :src="require('../assets/icon/pdf.png')"-->
-<!--            :title="'pdf文档(双击可预览)'"-->
-<!--          ></el-image>-->
-<!--          <el-image-->
-<!--            v-else-if="$FileType.isWord(scope.row.f_name)"-->
-<!--            :src="require('../assets/icon/word.png')"-->
-<!--            :title="'word文档(双击可预览)'"-->
-<!--          ></el-image>-->
-<!--          <el-image-->
-<!--            v-else-if="$FileType.isExcel(scope.row.f_name)"-->
-<!--            :src="require('../assets/icon/excel.png')"-->
-<!--            :title="'excel文档(双击可预览)'"-->
-<!--          ></el-image>-->
-<!--          <el-image-->
-<!--            v-else-if="$FileType.isCompress(scope.row.f_name)"-->
-<!--            :src="require('../assets/icon/compress.png')"-->
-<!--            :title="'压缩文件(双击可预览)'"-->
-<!--          ></el-image>-->
-<!--          <el-image-->
-<!--              v-else-if="$FileType.isMusic(scope.row.f_name)"-->
-<!--              :src="require('../assets/icon/music.png')"-->
-<!--              :title="'音频文件(双击可预览)'"-->
-<!--          ></el-image>-->
-<!--          <el-image-->
-<!--              v-else-if="$FileType.isVideo(scope.row.f_name)"-->
-<!--              fit:cover-->
-<!--              :src="scope.row.preview_url"-->
-<!--              :title="'视频文件(双击可预览)'"-->
-<!--          ></el-image>-->
-<!--          <el-image-->
-<!--              v-else-if="$FileType.isExe(scope.row.f_name)"-->
-<!--              :src="require('../assets/icon/exe.png')"-->
-<!--              :title="'可执行文件'"-->
-<!--          ></el-image>-->
-<!--          <el-image-->
-<!--            v-else-->
-<!--            :src="require('../assets/icon/other.png')"-->
-<!--            :title="'其他文件'"-->
-<!--          ></el-image>-->
           </div>
         </template>
       </el-table-column>
@@ -840,8 +771,8 @@ export default {
             url: '/user/resetUserPath',
             method: 'get',
           })
-        }
       }
+    },
   },
   mounted() {
     // 等待页面渲染完毕 发送请求
@@ -850,8 +781,8 @@ export default {
       this.getUserFileList();
     });
 
-    window.addEventListener('beforeunload', e => this.beforeunloadHandler(e))
-    window.addEventListener('unload', e => this.unloadHandler(e))
+    window.addEventListener('beforeunload', e => this.beforeunloadHandler(e));
+    window.addEventListener('unload', e => this.unloadHandler(e));
 
   },
   destroyed() {

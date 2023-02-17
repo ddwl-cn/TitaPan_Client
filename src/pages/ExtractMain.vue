@@ -298,6 +298,7 @@ export default {
   },
   components: {},
   mounted() {
+
     this.$http({
       method: "POST",
       headers: {

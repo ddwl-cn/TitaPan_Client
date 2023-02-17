@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container style="height: 540px">
     <el-menu @select="menuSelected">
 <!--      <el-container class="is-vertical shadow-container">-->
         <el-card shadow="hover">
@@ -35,9 +35,9 @@
 <!--    <el-container class="is-vertical shadow-container" style="margin-top: 50px;height: 50px">-->
     <el-footer>
     <el-upload
-          class="upload-demo shadow-container"
+          class="upload-demo"
           drag
-          style="width: 200px;margin-top: 159px;margin-left: -20px"
+          style="width: 200px;margin-top: 153px;margin-left: -20px"
           action=""
           :on-change="onChange"
           :auto-upload="false"
@@ -53,7 +53,6 @@
 </template>
 
 <script>
-import SparkMD5 from "spark-md5";
 export default {
   name: "Navigation",
   data(){
