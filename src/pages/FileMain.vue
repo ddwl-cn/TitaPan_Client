@@ -4,7 +4,6 @@
       <FileMainHeader :sentCommend="sentCreateFolder" ref="FileMainHeader"></FileMainHeader>
     </el-header>
     <el-main style="line-height: 15px; padding: 0; height: 500px">
-    <!-- <router-view ref="child"></router-view> -->
       <FileMainContent ref="FileMainContent"></FileMainContent>
     </el-main>
   </el-container>
@@ -18,7 +17,7 @@ export default {
   methods:{
     // 向FileMainContent组件发送添加文件夹的命令
     sentCreateFolder(){
-        this.$refs.FileMainContent.createFolder()
+      this.$refs.FileMainContent.createFolder()
     },
     getUserFileList(){
       this.$refs.FileMainContent.getUserFileList()
@@ -50,11 +49,10 @@ export default {
 <style scoped>
 .el-main {
   text-align: center;
-  line-height: 160px;
+  line-height: 150px;
 }
 .el-container {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
   margin-bottom: 40px;
-  margin-left: 5px;
 }
 </style>

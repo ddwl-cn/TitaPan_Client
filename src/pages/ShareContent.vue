@@ -1,9 +1,9 @@
 <template>
   <div>
     <el-empty
-      v-if="shareList.length === 0"
-      description="你还没有分享文件，快去分享吧！"
-      style="width: 100%; height: 500px; padding: 0px"
+        v-if="shareList.length === 0"
+        description="你还没有分享文件，快去分享吧！"
+        style="width: 100%; height: 500px; padding: 0px"
     ></el-empty>
     <el-table
         v-else

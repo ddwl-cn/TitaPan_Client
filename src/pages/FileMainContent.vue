@@ -1,21 +1,21 @@
 <template>
-  <div style="width: 100%">
+  <div style="width: 100%;">
     <el-empty
-      v-if="fileList.length === 0"
-      description="当前文件夹为空快去上传文件吧！"
-      style="width: 100%; height: 500px; padding: 0px"
+        v-if="fileList.length === 0"
+        description="当前文件夹为空快去上传文件吧！"
+        style="width: 100%; height: 500px; padding: 0px"
     ></el-empty>
     <el-table
-      v-else
-      height:500
-      :data="fileList"
-      :default-sort="{ prop: 'f_size' }"
-      @select="handleSelect"
-      @select-all="handleSelectAll"
-      style="width: 100%; margin-top: 10px;border-radius: 15px;"
-      @row-dblclick="preview"
-      v-loading="loadingData"
-      element-loading-text="数据加载中，请稍等......"
+        v-else
+        height:500
+        :data="fileList"
+        :default-sort="{ prop: 'f_size' }"
+        @select="handleSelect"
+        @select-all="handleSelectAll"
+        style="width: 100%; margin-top: 10px;border-radius: 15px;"
+        @row-dblclick="preview"
+        v-loading="loadingData"
+        element-loading-text="数据加载中，请稍等......"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
 
@@ -26,21 +26,20 @@
                 v-if="scope.row.isFolder"
                 :src="require('../assets/icon/folder.png')"
                 :title="'文件夹'"
-            >
-            </img>
+            />
             <img
                 v-else-if="$FileType.isApk(scope.row.f_name)"
-                :src="require('../assets/icon/apk.png')"
+                :src="scope.row.preview_url?scope.row.preview_url:require('../assets/icon/apk.png')"
                 :title="'apk文件'"
             />
             <img
                 v-else-if="$FileType.isPPT(scope.row.f_name)"
-                :src="require('../assets/icon/ppt.png')"
+                :src="scope.row.preview_url?scope.row.preview_url:require('../assets/icon/ppt.png')"
                 :title="'ppt文档(双击可预览)'"
             >
             <img
                 v-else-if="$FileType.isCode(scope.row.f_name)"
-                :src="require('../assets/icon/code.png')"
+                :src="scope.row.preview_url?scope.row.preview_url:require('../assets/icon/code.png')"
                 :title="'代码文件(双击可预览)'"
             >
             <img
@@ -51,27 +50,27 @@
             >
             <img
                 v-else-if="$FileType.isPdf(scope.row.f_name)"
-                :src="require('../assets/icon/pdf.png')"
+                :src="scope.row.preview_url?scope.row.preview_url:require('../assets/icon/pdf.png')"
                 :title="'pdf文档(双击可预览)'"
             >
             <img
                 v-else-if="$FileType.isWord(scope.row.f_name)"
-                :src="require('../assets/icon/word.png')"
+                :src="scope.row.preview_url?scope.row.preview_url:require('../assets/icon/word.png')"
                 :title="'word文档(双击可预览)'"
             >
             <img
                 v-else-if="$FileType.isExcel(scope.row.f_name)"
-                :src="require('../assets/icon/excel.png')"
+                :src="scope.row.preview_url?scope.row.preview_url:require('../assets/icon/excel.png')"
                 :title="'excel文档(双击可预览)'"
             >
             <img
                 v-else-if="$FileType.isCompress(scope.row.f_name)"
-                :src="require('../assets/icon/compress.png')"
+                :src="scope.row.preview_url?scope.row.preview_url:require('../assets/icon/compress.png')"
                 :title="'压缩文件(双击可预览)'"
             >
             <img
                 v-else-if="$FileType.isMusic(scope.row.f_name)"
-                :src="require('../assets/icon/music.png')"
+                :src="scope.row.preview_url?scope.row.preview_url:require('../assets/icon/music.png')"
                 :title="'音频文件(双击可预览)'"
             >
             <img
@@ -82,58 +81,58 @@
             >
             <img
                 v-else-if="$FileType.isExe(scope.row.f_name)"
-                :src="require('../assets/icon/exe.png')"
+                :src="scope.row.preview_url?scope.row.preview_url:require('../assets/icon/exe.png')"
                 :title="'可执行文件'"
             >
             <img
                 v-else
-                :src="require('../assets/icon/other.png')"
+                :src="scope.row.preview_url?scope.row.preview_url:require('../assets/icon/other.png')"
                 :title="'其他文件'"
             >
           </div>
         </template>
       </el-table-column>
       <el-table-column
-        label="文件名"
-        prop="f_name"
-        style="height: 15px"
-        sortable
-        :show-overflow-tooltip="true"
+          label="文件名"
+          prop="f_name"
+          style="height: 15px"
+          sortable
+          :show-overflow-tooltip="true"
       >
         <template slot-scope="scope">
           <el-input
-            v-show="scope.row.isEdit"
-            size="mini"
-            v-model="scope.row.f_name"
-            required
-            sortable
+              v-show="scope.row.isEdit"
+              size="mini"
+              v-model="scope.row.f_name"
+              required
+              sortable
           />
           <span v-show="!scope.row.isEdit">
             <span v-if="!scope.row.isFolder">{{ scope.row.f_name }}</span>
             <el-link
-              type="primary"
-              v-if="scope.row.isFolder"
-              @click="to(scope.row)"
-              >{{ scope.row.f_name }}</el-link
+                type="primary"
+                v-if="scope.row.isFolder"
+                @click="to(scope.row)"
+            >{{ scope.row.f_name }}</el-link
             >
           </span>
         </template>
       </el-table-column>
 
       <el-table-column
-        label="最后修改日期"
-        prop="upload_date"
-        style="height: 15px"
-        sortable
-        :show-overflow-tooltip="true"
+          label="最后修改日期"
+          prop="upload_date"
+          style="height: 15px"
+          sortable
+          :show-overflow-tooltip="true"
       >
       </el-table-column>
 
       <el-table-column
-        prop="f_size"
-        label="文件大小"
-        style="height: 15px"
-        sortable
+          prop="f_size"
+          label="文件大小"
+          style="height: 15px"
+          sortable
       >
         <template slot-scope="scope">
           {{changeFileSize(scope.row)}}
@@ -141,108 +140,108 @@
       </el-table-column>
       <el-table-column align="right" style="height: 15px">
 
-          <template slot="header" slot-scope="scope">
-            <el-input
+        <template slot="header" slot-scope="scope">
+          <el-input
               v-model="search"
               size="mini"
               placeholder="输入关键字搜索"
-            />
-          </template>
+          />
+        </template>
         <template slot-scope="scope">
           <div style="float: left">
-          <el-button
-            type="success"
-            size="mini"
-            
-            @click="
+            <el-button
+                type="success"
+                size="mini"
+
+                @click="
               dialogFormVisible = true;
               temp = scope.row;
             "
-            style="margin-right: 10px"
-            v-show="!scope.row.isEdit"
-          >
-            分享
-          </el-button>
-          <!-- dialog传值有问题 使用中间变量传值 -->
-          <el-dialog
-            :title="'分享文件：' + temp.f_name"
-            :visible.sync="dialogFormVisible"
-            align="left"
-            width="500px"
-          >
-            <el-card>
-              <el-form>
-                <el-form-item label="有效期" prop="valid">
-                  <el-radio-group v-model="shareForm.valid">
-                    <el-radio label="1天"></el-radio>
-                    <el-radio label="7天"></el-radio>
-                    <el-radio label="30天"></el-radio>
-                    <el-radio label="永久"></el-radio>
-                  </el-radio-group>
-                </el-form-item>
+                style="margin-right: 10px"
+                v-show="!scope.row.isEdit"
+            >
+              分享
+            </el-button>
+            <!-- dialog传值有问题 使用中间变量传值 -->
+            <el-dialog
+                :title="'分享文件：' + temp.f_name"
+                :visible.sync="dialogFormVisible"
+                align="left"
+                width="500px"
+            >
+              <el-card>
+                <el-form>
+                  <el-form-item label="有效期" prop="valid">
+                    <el-radio-group v-model="shareForm.valid">
+                      <el-radio label="1天"></el-radio>
+                      <el-radio label="7天"></el-radio>
+                      <el-radio label="30天"></el-radio>
+                      <el-radio label="永久"></el-radio>
+                    </el-radio-group>
+                  </el-form-item>
 
-                <el-form-item label="" prop="share_code">
-                  分享码：
-                  <el-input
-                    type="text"
-                    v-model="shareForm.share_code"
-                    style="width: 180px; padding-bottom: 10px"
-                    maxlength="6"
-                    placeholder="请输入6位分享码"
-                  />&ensp;仅包含数字和字母
-                </el-form-item>
-              </el-form>
-            </el-card>
-            <div slot="footer" class="dialog-footer">
-              <el-button @click="dialogFormVisible = false"
-              >取消</el-button
-              >
-              <el-button type="primary" @click="handleShare(temp)"
-              >创建分享链接</el-button
-              >
-            </div>
-          </el-dialog>
-          <el-button
-            type="success"
-            icon="el-icon-check"
-            circle
-            @click="saveChange(scope.row)"
-            v-show="scope.row.isEdit"
-            size="mini"
-          ></el-button>
-          <el-button
-            type="danger"
-            icon="el-icon-close"
-            circle
-            @click="cancelChange(scope.row)"
-            v-show="scope.row.isEdit"
-            size="mini"
-          ></el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-edit"
-            circle
-            @click="editFileName(scope.row)"
-            v-show="!scope.row.isEdit"
-            size="mini"
-          ></el-button>
-          <!-- 修改名字的时候删除键也得消失 -->
-          <el-button
-            type="danger"
-            icon="el-icon-delete"
-            circle
-            @click="deleteFile(scope.row)"
-            v-show="!scope.row.isEdit"
-            size="mini"
-          ></el-button>
-          <el-button
-            circle
-            type="warning"
-            icon="el-icon-download"
-            size="mini"
-            v-show="!scope.row.isEdit"
-            @click="downloadFile(scope.row)"
-          ></el-button>
+                  <el-form-item label="" prop="share_code">
+                    分享码：
+                    <el-input
+                        type="text"
+                        v-model="shareForm.share_code"
+                        style="width: 180px; padding-bottom: 10px"
+                        maxlength="6"
+                        placeholder="请输入6位分享码"
+                    />&ensp;仅包含数字和字母
+                  </el-form-item>
+                </el-form>
+              </el-card>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false"
+                >取消</el-button
+                >
+                <el-button type="primary" @click="handleShare(temp)"
+                >创建分享链接</el-button
+                >
+              </div>
+            </el-dialog>
+            <el-button
+                type="success"
+                icon="el-icon-check"
+                circle
+                @click="saveChange(scope.row)"
+                v-show="scope.row.isEdit"
+                size="mini"
+            ></el-button>
+            <el-button
+                type="danger"
+                icon="el-icon-close"
+                circle
+                @click="cancelChange(scope.row)"
+                v-show="scope.row.isEdit"
+                size="mini"
+            ></el-button>
+            <el-button
+                type="primary"
+                icon="el-icon-edit"
+                circle
+                @click="editFileName(scope.row)"
+                v-show="!scope.row.isEdit"
+                size="mini"
+            ></el-button>
+            <!-- 修改名字的时候删除键也得消失 -->
+            <el-button
+                type="danger"
+                icon="el-icon-delete"
+                circle
+                @click="deleteFile(scope.row)"
+                v-show="!scope.row.isEdit"
+                size="mini"
+            ></el-button>
+            <el-button
+                circle
+                type="warning"
+                icon="el-icon-download"
+                size="mini"
+                v-show="!scope.row.isEdit"
+                @click="downloadFile(scope.row)"
+            ></el-button>
           </div>
         </template>
       </el-table-column>
@@ -288,24 +287,24 @@ export default {
         method: "GET",
         url: "/user/getUserFileList",
       }).then((res) => {
-            if (res.status === 200 && res.data.data) {
-              this.userFiles = this.handleFileData(res.data.data);
-              this.loadingData = false;
-            }
-            else if(!res.headers.data){
-              this.$message({
-                type: "error",
-                message: "未知错误!",
-              });
-              this.loadingData = false;
-            }
-          }).catch((e) => {
-                this.$message({
-                  type: "error",
-                  message: e,
-                  });
-                this.loadingData = false;
-          })
+        if (res.status === 200 && res.data.data) {
+          this.userFiles = this.handleFileData(res.data.data);
+          this.loadingData = false;
+        }
+        else if(!res.headers.data){
+          this.$message({
+            type: "error",
+            message: "未知错误!",
+          });
+          this.loadingData = false;
+        }
+      }).catch((e) => {
+        this.$message({
+          type: "error",
+          message: e,
+        });
+        this.loadingData = false;
+      })
 
     },
     changeFileSize(file) {
@@ -394,52 +393,52 @@ export default {
       }
 
       if (
-        this.getFileSuffix(rowData.f_name) !==
+          this.getFileSuffix(rowData.f_name) !==
           this.getFileSuffix(rowData.old_f_name) &&
-        !rowData.isFolder
+          !rowData.isFolder
       ) {
         this.$confirm("修改文件后缀可能会导致文件损坏，确定要修改？", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning",
         })
-          .then(() => {
-            this.$http({
-              method: "post",
-              url: "/user/updateFileName",
-              params: {
-                oldName: rowData.old_f_name,
-                newName: rowData.f_name,
-                isFolder: false,
-              },
-            }).then((res) => {
-              // 修改成功
-              if (res.data.msg === "updateFileNameSuccess") {
-                // 更新成功
-                rowData.old_f_name = rowData.f_name;
-                this.$set(rowData, "isEdit", false);
-                this.getUserFileList();
-              } else if (res.data.msg === "fileNameRepetitive") {
-                // 重名不能修改
-                rowData.f_name = rowData.old_f_name;
-                this.$message({
-                  type: "warning",
-                  message: "文件名重复!",
-                });
-              } else {
-                this.$message({
-                  type: "error",
-                  message: "未知错误!",
-                });
-              }
+            .then(() => {
+              this.$http({
+                method: "post",
+                url: "/user/updateFileName",
+                params: {
+                  oldName: rowData.old_f_name,
+                  newName: rowData.f_name,
+                  isFolder: false,
+                },
+              }).then((res) => {
+                // 修改成功
+                if (res.data.msg === "updateFileNameSuccess") {
+                  // 更新成功
+                  rowData.old_f_name = rowData.f_name;
+                  this.$set(rowData, "isEdit", false);
+                  this.getUserFileList();
+                } else if (res.data.msg === "fileNameRepetitive") {
+                  // 重名不能修改
+                  rowData.f_name = rowData.old_f_name;
+                  this.$message({
+                    type: "warning",
+                    message: "文件名重复!",
+                  });
+                } else {
+                  this.$message({
+                    type: "error",
+                    message: "未知错误!",
+                  });
+                }
+              });
+            })
+            .catch(() => {
+              this.$message({
+                type: "success",
+                message: "已取消!",
+              });
             });
-          })
-          .catch(() => {
-            this.$message({
-              type: "success",
-              message: "已取消!",
-            });
-          });
       } else {
         this.$http({
           method: "post",
@@ -549,31 +548,32 @@ export default {
           token: localStorage.getItem("token"),
         },
       })
-        .then((res) => {
-          // 创建写入流 filename为下载的文件名
-          const fileStream = streamSaver.createWriteStream((rowData.old_f_name + (rowData.isFolder ? ".zip" : "")), {
-            size: res.headers.get("content-length"),
-          });
-          const readableStream = res.body;
-          if (window.WritableStream && readableStream.pipeTo) {
-            return readableStream.pipeTo(fileStream).then(() => {});
-          }
-          window.writer = fileStream.getWriter();
-          const reader = res.body.getReader();
-          const pump = () => reader.read().then((res) =>
-                                                  res.done
-                                                      ? window.writer.close()
-                                                      : window.writer.write(res.value).then(pump)
-                                              );
-          pump();
+          .then((res) => {
+            // 创建写入流 filename为下载的文件名
+            const fileStream = streamSaver.createWriteStream((rowData.old_f_name + (rowData.isFolder ? ".zip" : "")), {
+              size: res.headers.get("content-length"),
+            });
+            const readableStream = res.body;
+            if (window.WritableStream && readableStream.pipeTo) {
+              return readableStream.pipeTo(fileStream).then(() => {});
+            }
+            window.writer = fileStream.getWriter();
+            const reader = res.body.getReader();
+            const pump = () => reader.read().then((res) =>
 
-        })
-        .then((error) => {
-          this.$message({
-            type: "error",
-            message: error.toString(),
+                res.done
+                    ? window.writer.close()
+                    : window.writer.write(res.value).then(pump)
+            );
+            pump();
+
           })
-        });
+          .then((error) => {
+            this.$message({
+              type: "error",
+              message: error.toString(),
+            })
+          });
     },
     downloadSelected(rows) {
       var flag = false;
@@ -699,10 +699,10 @@ export default {
         if (response.data.msg === "createShareLinkSuccess") {
           var aux = document.createElement("input");
           let content =
-            "访问链接：" + 'http://127.0.0.1:8081/#/user/extract/'+
-            this.shareForm.share_uuid +
-            ", 提取文件。分享码：" +
-            this.shareForm.share_code;
+              "访问链接：" + 'http://127.0.0.1:8081/#/user/extract/'+
+              this.shareForm.share_uuid +
+              ", 提取文件。分享码：" +
+              this.shareForm.share_code;
           aux.setAttribute("value", content);
           document.body.appendChild(aux);
           aux.select();
@@ -767,10 +767,10 @@ export default {
       // debugger
       //判断是窗口关闭还是刷新
       if(this._gap_time<=5){
-          this.$http({
-            url: '/user/resetUserPath',
-            method: 'get',
-          })
+        this.$http({
+          url: '/user/resetUserPath',
+          method: 'get',
+        })
       }
     },
   },
@@ -793,9 +793,9 @@ export default {
     fileList() {
       // 返回筛选过过关键词后的文件列表
       return this.userFiles.filter(
-        (data) =>
-          !this.search ||
-          data.f_name.toLowerCase().includes(this.search.toLowerCase())
+          (data) =>
+              !this.search ||
+              data.f_name.toLowerCase().includes(this.search.toLowerCase())
       );
     },
   },

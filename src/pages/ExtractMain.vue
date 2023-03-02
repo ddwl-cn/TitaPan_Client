@@ -101,7 +101,7 @@
               <el-table-column
                   property="fileName"
                   label="文件夹"
-                  width="500%"
+                  width="475%"
                   style="height: 15px"
                   align="left"
                   :show-overflow-tooltip="true"

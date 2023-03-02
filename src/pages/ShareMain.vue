@@ -1,8 +1,8 @@
 <template>
   <el-container>
-  <el-main style="line-height: 15px; padding: 0; height: 500px">
-  <ShareContent></ShareContent>
-  </el-main>
+    <el-main style="line-height: 15px; padding: 0; height: 500px">
+      <ShareContent></ShareContent>
+    </el-main>
   </el-container>
 </template>
 

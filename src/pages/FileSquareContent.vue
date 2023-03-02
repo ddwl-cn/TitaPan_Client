@@ -1,14 +1,27 @@
 <template>
-  <el-container class="is-horizontal shadow-container">
-    <el-header style="height: 10px"><el-input style="height: 30px;width: 200px" v-model="search"/></el-header>
-    <el-main>
-        <el-row type="flex" justify="space-around" :gutter="20" v-for="i in Math.ceil(data.showNumber/4)" :key="getUUID()">
-          <el-col :span="6" v-for="j in (data.showNumber-(i-1)*4)>4?4:(data.showNumber-(i-1)*4)" :key="getUUID()">
-            <FileInfoBox :publicFileInfo="data.publicFileList[(i-1)*4+j-1]"></FileInfoBox>
-          </el-col>
-        </el-row>
+  <el-container class="is-vertical shadow-container">
+    <el-header style="height: 20px">
+      <el-input style="margin-top: 10px;margin-right: 10px; float: right"
+                v-model="search"
+                @keyup.enter.native="getPublicFileList(1)"
+                size="medium"
+                placeholder="输入关键字搜索">
+        <el-button
+            type="primary"
+            slot="append"
+            icon="el-icon-search"
+            @click="getPublicFileList(1)"
+        ></el-button>
+      </el-input>
+    </el-header>
+    <el-main style="margin-top: 10px">
+      <el-row type="flex" justify="space-around" :gutter="20" v-for="i in Math.ceil(data.showNumber/4)" :key="getUUID()">
+        <el-col :span="6" v-for="j in (data.showNumber-(i-1)*4)>4?4:(data.showNumber-(i-1)*4)" :key="getUUID()">
+          <FileInfoBox :publicFileInfo="data.publicFileList[(i-1)*4+j-1]"></FileInfoBox>
+        </el-col>
+      </el-row>
     </el-main>
-    <el-footer style="margin-top: -10px">
+    <el-footer style="margin-top: -50px">
       <el-pagination
           background
           @current-change="getPublicFileList"
@@ -70,7 +83,8 @@ export default {
         url: '/public/getPublicFileList',
         params:{
           index: currentIndex,
-          count: 8
+          count: 8,
+          search: this.search,
         }
       }).then((res)=>{
         if(res.status===200){
@@ -111,8 +125,10 @@ export default {
   flex-wrap: wrap;
 }
 /deep/ .el-input .el-input__inner {
-  height: 25px;
+  height: 40px;
+  width: 300px;
   line-height: 25px;
+  float: right
 }
 .el-row{
   width: 100%;
