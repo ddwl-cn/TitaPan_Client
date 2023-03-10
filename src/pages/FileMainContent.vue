@@ -1,19 +1,44 @@
 <template>
-  <div style="width: 100%;">
-    <el-empty
-        v-if="fileList.length === 0"
-        description="当前文件夹为空快去上传文件吧！"
-        style="width: 100%; height: 500px; padding: 0px"
-    ></el-empty>
+  <div style="width: 100%;height: 95%" @contextmenu="rightClick_" @mousedown="mouseClick($event)">
+    <div id="contextmenu"
+         v-show="menuVisible"
+         class="menu">
+      <div class="contextmenu__item"
+           v-if="CurrentRow"
+           @click="editFileName(CurrentRow)"><i class="el-icon-edit" style="margin-right: 10px;"></i>重命名</div>
+      <div class="contextmenu__item"
+           v-if="CurrentRow"
+           @click="downloadFile(CurrentRow)"><i class="el-icon-download" style="margin-right: 10px;"></i>下载</div>
+      <div class="contextmenu__item"
+           v-if="!CurrentRow"
+           @click="createFolder()"><i class="el-icon-folder-add" style="margin-right: 10px;"></i>新建文件夹</div>
+      <div class="contextmenu__item"
+           v-if="CurrentRow"
+           @click="copyFile(CurrentRow)"><i class="el-icon-document-copy" style="margin-right: 10px;"></i>复制</div>
+      <div class="contextmenu__item"
+           v-if="CurrentRow"
+           @click="cutFile(CurrentRow)"><i class="el-icon-document-remove" style="margin-right: 10px;"></i>剪切</div>
+      <div class="contextmenu__item"
+           @click="pasteFile(CurrentRow)"><i class="el-icon-tickets" style="margin-right: 10px;"></i>粘贴</div>
+      <div class="contextmenu__item"
+           v-if="CurrentRow"
+           @click="deleteFile(CurrentRow)"><i class="el-icon-document-delete" style="margin-right: 10px;"></i>删除</div>
+    </div>
+
+<!--    <el-empty-->
+<!--        v-if="fileList.length === 0"-->
+<!--        description="当前文件夹为空快去上传文件吧！"-->
+<!--        style="width: 100%; height: 500px; padding: 0"-->
+<!--    ></el-empty>-->
     <el-table
-        v-else
-        height:500
+        height="103%"
         :data="fileList"
         :default-sort="{ prop: 'f_size' }"
         @select="handleSelect"
         @select-all="handleSelectAll"
         style="width: 100%; margin-top: 10px;border-radius: 15px;"
         @row-dblclick="preview"
+        @row-contextmenu="rightClick"
         v-loading="loadingData"
         element-loading-text="数据加载中，请稍等......"
     >
@@ -138,14 +163,24 @@
           {{changeFileSize(scope.row)}}
         </template>
       </el-table-column>
-      <el-table-column align="right" style="height: 15px">
+      <el-table-column align="right" style="height: 15px" width="350">
 
         <template slot="header" slot-scope="scope">
           <el-input
               v-model="search"
               size="mini"
               placeholder="输入关键字搜索"
-          />
+              class="input-with-select"
+          >
+            <el-select v-model="fileType" @change="getUserFileList" collapse-tags slot="prepend" placeholder="请选择" style="width: 100px">
+              <el-option label="全部" value="0"></el-option>
+              <el-option label="文件夹" value="1"></el-option>
+              <el-option label="图片" value="2"></el-option>
+              <el-option label="视频" value="3"></el-option>
+              <el-option label="压缩文件" value="4"></el-option>
+              <el-option label="其他" value="5"></el-option>
+            </el-select>
+          </el-input>
         </template>
         <template slot-scope="scope">
           <div style="float: left">
@@ -256,6 +291,7 @@ export default {
   name: "FileMainContent",
   data() {
     return {
+      fileType: '全部',
       // 加载中
       loadingData: false,
       /* 表单内嵌dialog会出现scope传值一直为列表最后一个元素的bug 暂时不知道怎么解决 引入额外的变量进行传值*/
@@ -278,6 +314,11 @@ export default {
         expire_date: 0,
         valid: "",
       },
+
+      // 右键菜单
+      menuVisible:false,
+      CurrentRow: null,
+      flag: 0,
     };
   },
   methods: {
@@ -541,7 +582,7 @@ export default {
     },
     downloadFile(rowData) {
       fetch("http://127.0.0.1:8999/download/single?f_name=" + rowData.old_f_name, { // 使用old_f_name 防止在修改名字的过程中下载该文件
-        method: "GET",
+        method: "POST",
         mode: "cors", // 跨域
         credentials: "include",
         headers: {
@@ -569,10 +610,7 @@ export default {
 
           })
           .then((error) => {
-            this.$message({
-              type: "error",
-              message: error.toString(),
-            })
+
           });
     },
     downloadSelected(rows) {
@@ -773,6 +811,138 @@ export default {
         })
       }
     },
+    copyFile(rowData){
+      this.$http({
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        url: "/user/copy",
+        data: {f_name: rowData.f_name},
+      }).then(res=>{
+        if(res.status === 200){
+          if(res.data.msg === "copyFileSuccess"){
+            this.$message.success("已复制到粘贴板！");
+          }
+          else{
+            this.$message.error("复制出错！");
+          }
+        }
+        else{
+          this.$message.error("未知错误！");
+        }
+      })
+    },
+    cutFile(rowData){
+      this.$http({
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        url: "/user/cut",
+        data: {f_name: rowData.f_name},
+      }).then(res=>{
+        if(res.status === 200){
+          if(res.data.msg === "cutFileSuccess"){
+            this.$message.success("已剪切到粘贴板");
+          }
+          else{
+            this.$message.error("剪切出错！");
+          }
+        }
+        else{
+          this.$message.error("未知错误！");
+
+        }
+      })
+    },
+    pasteFile(rowData){
+      this.$http({
+        method: "GET",
+        url: "/user/paste",
+      }).then(res=>{
+        if(res.status === 200){
+          if(res.data.msg === "pasteFileSuccess"){
+            this.$message.success("粘贴成功");
+            this.getUserFileList();
+          }
+          else if(res.data.msg === "fileNameRepetitive"){
+            this.$message.warning("有重名文件！");
+          }
+          else if(res.data.msg === "pasteRecursive"){
+            this.$message.warning("剪切位置不能为被剪切文件的子路径！");
+          }
+        }
+        else{
+          this.$message.error("未知错误！");
+        }
+      })
+    },
+    rightClick_(event) {
+      // 如果菜单已被激活说明点击的是表格行 直接退出
+      if(this.flag !== 0) return;
+      this.CurrentRow = null;
+      this.menuVisible = false // 先把模态框关死，目的是 第二次或者第n次右键鼠标的时候 它默认的是true
+      this.menuVisible = true // 显示模态窗口，跳出自定义菜单栏
+      event.preventDefault() //关闭浏览器右键默认事件
+      var menu = document.querySelector('.menu')
+      this.styleMenu(event, menu)
+    },
+    rightClick(row, column, event) {
+      this.flag = 1;// 激活菜单
+      this.testModeCode = row?row.testModeCode:row;
+      this.menuVisible = false // 先把模态框关死，目的是 第二次或者第n次右键鼠标的时候 它默认的是true
+      this.menuVisible = true // 显示模态窗口，跳出自定义菜单栏
+      event.preventDefault() //关闭浏览器右键默认事件
+      this.CurrentRow = row
+      var menu = document.querySelector('.menu')
+      this.styleMenu(event, menu)
+    },
+    foo() {
+      // 取消鼠标监听事件 菜单栏
+      this.menuVisible = false;
+      this.CurrentRow = null;
+      this.flag = 0;
+      document.removeEventListener('click', this.foo) // 关掉监听，
+    },
+    styleMenu(event, menu) {
+      console.log(event, menu)
+      if (event.clientX > 1200) {
+        menu.style.left = event.clientX - 100 + 'px'
+      } else {
+        menu.style.left = event.clientX + 1 + 'px'
+      }
+      document.addEventListener('click', this.foo) // 给整个document新增监听鼠标事件，点击任何位置执行foo方法
+      if (event.clientY > 550) {
+        menu.style.top = event.clientY - 60 + 'px'
+      } else {
+        menu.style.top = event.clientY - 10 + 'px'
+      }
+    },
+    fileTypeValue(file){
+      if(file.isFolder) return '1';
+      if(this.$FileType.isImg(file.f_name))
+        return '2';
+      if(this.$FileType.isVideo(file.f_name))
+        return '3';
+      if(this.$FileType.isCompress(file.f_name))
+        return '4';
+      return '5';
+    },
+    mouseClick(event){
+
+      if(event.button === 0) {
+        // console.log(event)
+        // this.flag = 0;
+        // this.CurrentRow = null;
+        // this.menuVisible = false;
+      }
+      else if(event.button === 2) {
+        this.flag = 0;
+        this.CurrentRow = null;
+        this.menuVisible = false;
+      }
+    }
   },
   mounted() {
     // 等待页面渲染完毕 发送请求
@@ -792,11 +962,13 @@ export default {
   computed: {
     fileList() {
       // 返回筛选过过关键词后的文件列表
-      return this.userFiles.filter(
-          (data) =>
-              !this.search ||
-              data.f_name.toLowerCase().includes(this.search.toLowerCase())
-      );
+      this.userFiles.forEach(data=>{
+        console.log(this.fileType, this.fileTypeValue(data)===this.fileType);
+      })
+
+      return this.userFiles.filter((data) =>
+          !this.search || data.f_name.toLowerCase().includes(this.search.toLowerCase()))
+      .filter((data) =>(this.fileType==="全部" || this.fileType==="0") || this.fileTypeValue(data) === this.fileType);
     },
   },
 };
@@ -825,4 +997,44 @@ export default {
   height: 100%;
   object-fit: cover;
 }
+
+
+.contextmenu__item {
+  display: block;
+  line-height: 34px;
+  text-align: center;
+}
+.contextmenu__item:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.menu {
+  position: absolute;
+  background-color: #fff;
+  width: 100px;
+  /*height: 106px;*/
+  font-size: 12px;
+  color: #444040;
+  border-radius: 4px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  white-space: nowrap;
+  z-index: 1000;
+}
+.contextmenu__item:hover {
+  cursor: pointer;
+  background: #66b1ff;
+  border-color: #66b1ff;
+  color: #fff;
+}
+
+.el-select .el-input {
+  margin-top: 15px;
+  width: 130px;
+}
+.input-with-select {
+  background-color: white;
+}
+
 </style>

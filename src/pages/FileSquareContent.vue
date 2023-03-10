@@ -21,7 +21,7 @@
         </el-col>
       </el-row>
     </el-main>
-    <el-footer style="margin-top: -50px">
+    <el-footer style="margin-top: -40px">
       <el-pagination
           background
           @current-change="getPublicFileList"
@@ -138,4 +138,9 @@ export default {
 .el-col {
   border-radius: 4px;
 }
+.el-pagination{
+  padding-top: 15px;
+}
+
+
 </style>
