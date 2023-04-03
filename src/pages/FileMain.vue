@@ -1,9 +1,9 @@
 <template>
-  <el-container class="is-vertical">
-    <el-header height="40px" style="text-align: right; font-size: 12px">
+  <el-container style="height: 96%;width: 99%" class="is-vertical">
+    <el-header height="40px" style="text-align: right; font-size: 12px;width: 100%">
       <FileMainHeader :sentCommend="sentCreateFolder" ref="FileMainHeader"></FileMainHeader>
     </el-header>
-    <el-main style="line-height: 15px; padding: 0; height: 500px">
+    <el-main style="line-height: 15px; padding: 0; height: 100%;overflow:hidden;width: 100%">
       <FileMainContent ref="FileMainContent"></FileMainContent>
     </el-main>
   </el-container>
@@ -54,5 +54,6 @@ export default {
 .el-container {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
   margin-bottom: 40px;
+  margin-top: 5px;
 }
 </style>

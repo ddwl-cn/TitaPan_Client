@@ -1,13 +1,13 @@
 <template>
-  <div>
+  <div style="margin-top: 0;height: 100%">
     <el-empty
         v-if="shareList.length === 0"
         description="你还没有分享文件，快去分享吧！"
-        style="width: 100%; height: 500px; padding: 0px"
+        style="width: 100%; height: 100%; padding: 0px"
     ></el-empty>
     <el-table
         v-else
-        height:500
+        height="100%"
         :data="
         shareList.filter(
           (data) =>
@@ -21,7 +21,6 @@
       <el-table-column
           label="文件名"
           prop="f_name"
-          style="height: 15px"
           sortable
           :show-overflow-tooltip="true"
       >
@@ -30,7 +29,6 @@
       <el-table-column
           label="文件位置"
           prop="storage_path"
-          style="height: 15px"
           sortable
           width="320px"
           :show-overflow-tooltip="true"
@@ -40,7 +38,6 @@
       <el-table-column
           label="过期时间"
           prop="expire_date"
-          style="height: 15px"
           sortable
           :show-overflow-tooltip="true"
           width="200px"
@@ -50,7 +47,6 @@
       <el-table-column
           label="状态"
           prop="status"
-          style="height: 15px"
           sortable
           width="80px"
           :show-overflow-tooltip="true"
@@ -59,14 +55,13 @@
       <el-table-column
           prop="share_code"
           label="分享码"
-          style="height: 15px"
           sortable
           width="120px"
       >
       </el-table-column>
-      <el-table-column align="right" style="height: 15px" width="220px">
-        <template slot="header">
-          <el-input v-model="search" size="mini" placeholder="搜索指定文件"/>
+      <el-table-column align="right" width="220px">
+        <template slot="header" slot-scope="scope">
+          <el-input type="text" v-model="search" size="mini" placeholder="搜索指定文件"/>
         </template>
         <template slot-scope="scope">
           <el-button

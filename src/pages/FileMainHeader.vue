@@ -206,7 +206,19 @@ export default {
     // 获取已选中的文件(上传中的选择)
     handleSelect(file, fileList) {
       let s = this.file_arr.length;
+      const regExp = /[\:\<\>\|\\\*\?\"\%]/g;
+      let flag = true; // 明明是否合法
+      fileList.forEach((item) => {
+        if(regExp.test(item.raw.name)){
 
+          flag = false;
+        }
+      });
+      if(!flag){
+        this.$message.warning("上传的文件名中不能包含：%、\\、/、:、*、?、\"、<、>、| 等特殊字符");
+        this.$refs.upload.clearFiles();
+        return;
+      }
       fileList.forEach((item) => {
         this.file_arr.push({
           id: item.uid,

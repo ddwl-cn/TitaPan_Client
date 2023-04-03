@@ -10,7 +10,7 @@
           size="mini"
           icon="el-icon-s-home"
           @click="root"
-          :disabled="userPath[position] === '/'"
+          :disabled="nowPath === '/'"
           >返回根目录</el-button
         >
         <el-button
@@ -18,9 +18,10 @@
           size="mini"
           icon="el-icon-arrow-left"
           @click="back"
-          :disabled="userPath[position] === '/'"
+          :disabled="nowPath === '/'"
           >上一级</el-button
         >
+
 <!--        <el-button-->
 <!--          type="primary"-->
 <!--          size="mini"-->
@@ -29,7 +30,30 @@
 <!--          >下一级<i class="el-icon-arrow-right el-icon&#45;&#45;right"></i-->
 <!--        ></el-button>-->
       </el-button-group>
+
+      <el-input v-model="tempPath"
+                size="mini"
+                @keyup.enter.native="requestChangePath(tempPath)"
+                style="margin-top: 0;margin-left: 20px; float: left;width: 300px">
+        <el-button
+            type="primary"
+            slot="append"
+            icon="el-icon-right"
+            @click="requestChangePath(tempPath)"
+            title="前往"
+        ></el-button>
+        <hr/>
+        <el-button
+            type="primary"
+            slot="prepend"
+            icon="el-icon-refresh"
+            @click="requestChangePath(nowPath)"
+            title="重新加载当前目录"
+        ></el-button>
+
+      </el-input>
     </el-breadcrumb>
+
   </div>
 </template>
 
@@ -39,49 +63,51 @@ export default {
   data() {
     return {
       // 用户当前所在路径 默认在根路径
-      userPath: JSON.parse(sessionStorage.getItem("userPath")) || ["/"],
-      position: parseInt(sessionStorage.getItem("position")) || 0,
-
+      nowPath: sessionStorage.getItem('nowPath')?sessionStorage.getItem('nowPath'):'/',
+      tempPath: sessionStorage.getItem('nowPath')?sessionStorage.getItem('nowPath'):'/',
     }
   },
   methods: {
     // 返回根目录
     root() {
-      this.position = 0;
-      this.requestChangePath(this.userPath[this.position]);
-      this.userPath.length = this.position + 1;
-      sessionStorage.setItem("position", this.position.toString());
-      sessionStorage.setItem("userPath", JSON.stringify(this.userPath));
+      this.nowPath = '/';
+      this.requestChangePath(this.nowPath);
+      sessionStorage.setItem("nowPath", this.nowPath);
     },
     // 返回上一级
     back() {
-      if (this.position <= 0) {
-        return;
-      }
-      this.position--;
-      this.requestChangePath(this.userPath[this.position], false);
-    },
-    // 弃用
-    next() {
-      if (this.position >= this.userPath.length) {
-        return;
-      }
-      this.position++;
-      this.requestChangePath(this.userPath[this.position]);
-      sessionStorage.setItem("position", this.position.toString());
-      sessionStorage.setItem("userPath", JSON.stringify(this.userPath));
+      let t = this.nowPath.substring(0, this.nowPath.lastIndexOf('/'));
+      this.nowPath = t.substring(0, t.lastIndexOf('/') + 1);
+      this.requestChangePath(this.nowPath)
+      sessionStorage.setItem("nowPath", this.nowPath);
     },
     // 传来下一级的文件名称
     toPath(folderName) {
-      var destPath = this.userPath[this.position] + folderName + "/";
-      this.requestChangePath(destPath, true);
-
+      var destPath = this.nowPath + folderName + "/";
+      this.requestChangePath(destPath);
     },
     getUserPath() {
-      return this.userPath[this.position];
+      return this.nowPath;
+    },
+    checkPath(path){
+      if(!path.endsWith('/')){
+        this.$message({
+          type: "error",
+          message: "路径错误!",
+        });
+        return;
+      }
+      this.requestChangePath(path);
     },
     // 向后端发送更改路径请求 同时重新更新文件列表
-    requestChangePath(path, LastOrNext) {
+    requestChangePath(path) {
+      if(!path.endsWith('/')){
+        this.$message({
+          type: "error",
+          message: "路径错误!",
+        });
+        return;
+      }
       this.$http({
         method: "post",
         url: "/user/toPath",
@@ -93,18 +119,9 @@ export default {
           if (res.data.msg === "changePathSuccess") {
             // 重新获取当前目录下的文件列表
             this.$parent.$parent.$parent.$parent.getUserFileList();
-            if(LastOrNext){
-              this.userPath.push(path);
-              this.position += 1;
-              // 保存路径到本地session存储 确保刷新后任然在当前目录下
-              sessionStorage.setItem("position", this.position.toString());
-              sessionStorage.setItem("userPath", JSON.stringify(this.userPath));
-            }
-            else{
-              this.userPath.length = this.position + 1;
-              sessionStorage.setItem("position", this.position.toString());
-              sessionStorage.setItem("userPath", JSON.stringify(this.userPath));
-            }
+            sessionStorage.setItem("nowPath", path);
+            this.nowPath = path;
+            this.tempPath = path;
           }
           else {
             this.$message({

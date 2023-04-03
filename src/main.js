@@ -6,6 +6,7 @@ import FileType from "./js/FileType.js";
 import axios from "axios";
 import VueRouter from "vue-router";
 import router from "./router/index";
+import global from "@/js/global";
 
 // 应用elemeent ui插件
 Vue.use(ElementUi);
@@ -13,10 +14,11 @@ Vue.use(VueRouter);
 Vue.config.productionTip = false;
 
 Vue.prototype.$FileType = FileType;
+Vue.prototype.$global = global;
 
 // 添加全局axios
 Vue.prototype.$http = axios;
-axios.defaults.baseURL = "http://127.0.0.1:8999";
+axios.defaults.baseURL = `${global.host}:${global.serverport}`;
 axios.defaults.withCredentials = true;
 // 配置axios拦截器
 axios.interceptors.request.use((config) => {

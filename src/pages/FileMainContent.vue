@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%;height: 95%" @contextmenu="rightClick_" @mousedown="mouseClick($event)">
+  <div style="width: 100%;height: 100%" @contextmenu="rightClick_" @mousedown="mouseClick($event)">
     <div id="contextmenu"
          v-show="menuVisible"
          class="menu">
@@ -31,12 +31,12 @@
 <!--        style="width: 100%; height: 500px; padding: 0"-->
 <!--    ></el-empty>-->
     <el-table
-        height="103%"
+        height="99%"
         :data="fileList"
         :default-sort="{ prop: 'f_size' }"
         @select="handleSelect"
         @select-all="handleSelectAll"
-        style="width: 100%; margin-top: 10px;border-radius: 15px;"
+        style=" margin-top: 10px;border-radius: 15px;"
         @row-dblclick="preview"
         @row-contextmenu="rightClick"
         v-loading="loadingData"
@@ -129,6 +129,7 @@
               v-show="scope.row.isEdit"
               size="mini"
               v-model="scope.row.f_name"
+              @keyup.enter.native="saveChange(scope.row)"
               required
               sortable
           />
@@ -187,12 +188,12 @@
             <el-button
                 type="success"
                 size="mini"
-
+                icon="el-icon-share"
                 @click="
               dialogFormVisible = true;
               temp = scope.row;
             "
-                style="margin-right: 10px"
+                style="margin-right: 10px;"
                 v-show="!scope.row.isEdit"
             >
               分享
@@ -581,7 +582,7 @@ export default {
       });
     },
     downloadFile(rowData) {
-      fetch("http://127.0.0.1:8999/download/single?f_name=" + rowData.old_f_name, { // 使用old_f_name 防止在修改名字的过程中下载该文件
+      fetch(`${this.$global.host}:${this.$global.serverport}/download/single?f_name=` + rowData.old_f_name, { // 使用old_f_name 防止在修改名字的过程中下载该文件
         method: "POST",
         mode: "cors", // 跨域
         credentials: "include",
@@ -737,7 +738,7 @@ export default {
         if (response.data.msg === "createShareLinkSuccess") {
           var aux = document.createElement("input");
           let content =
-              "访问链接：" + 'http://127.0.0.1:8081/#/user/extract/'+
+              "访问链接：" + `${this.$global.host}:${this.$global.clientport}/#/user/extract/`+
               this.shareForm.share_uuid +
               ", 提取文件。分享码：" +
               this.shareForm.share_code;
@@ -778,7 +779,7 @@ export default {
           if(res.data.status === 200){
             loading.close();
 
-            window.open("http://127.0.0.1:8012/onlinePreview?url=" + encodeURIComponent(btoa("http://127.0.0.1:8012/" + res.data.data)))
+            window.open(`${this.$global.host}:${this.$global.previewport}/onlinePreview?url=` + encodeURIComponent(btoa(`${this.$global.host}:${this.$global.previewport}/` + res.data.data)))
           }
           else{
             loading.close();
@@ -1036,5 +1037,4 @@ export default {
 .input-with-select {
   background-color: white;
 }
-
 </style>

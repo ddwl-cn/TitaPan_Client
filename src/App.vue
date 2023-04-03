@@ -12,8 +12,26 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 #app{
   height: 100%;
+  /*background-image: url(./assets/background.jpg);*/
+}
+/*.page-scroll {*/
+/*  height: 100%;*/
+/*}*/
+
+/*.page-scroll .el-scrollbar__wrap {*/
+/*  overflow-x: hidden;*/
+/*}*/
+/**修改全局的滚动条*/
+/**滚动条的宽度*/
+::-webkit-scrollbar {
+  width: 8px;
+
+}
+::-webkit-scrollbar-thumb {
+  background-color: #eaecf1;
+  border-radius: 3px;
 }
 </style>

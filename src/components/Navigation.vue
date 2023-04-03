@@ -1,7 +1,6 @@
 <template>
-  <el-container style="height: 540px">
-    <el-menu @select="menuSelected">
-      <!--      <el-container class="is-vertical shadow-container">-->
+  <el-container style="height: 100%;overflow:hidden;" class="shadow-container">
+    <el-menu @select="menuSelected" style="height: 100%">
       <el-card shadow="hover">
         <router-link to="/user/home" >
           <template slot="title">我的文件</template>
@@ -30,14 +29,12 @@
                 :src="require('../assets/icon/'+selected_icon[2][switches[index][2]])"></el-image>文件广场</el-menu-item>
         </router-link>
       </el-card>
-      <!--  </el-container>-->
     </el-menu>
-    <!--    <el-container class="is-vertical shadow-container" style="margin-top: 50px;height: 50px">-->
-    <el-footer>
+    <el-footer style="margin-bottom: 275px">
       <el-upload
           class="upload-demo"
           drag
-          style="width: 200px;margin-top: 153px;margin-left: -20px"
+          style="width: 123%;margin-top: 153px;margin-left: -20px"
           action=""
           :on-change="onChange"
           :auto-upload="false"
@@ -48,7 +45,6 @@
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
       </el-upload>
     </el-footer>
-    <!--    </el-container>-->
   </el-container>
 </template>
 
@@ -94,6 +90,7 @@ export default {
 .shadow-container {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
   border-radius: 10px;
+  /*background-color: #F3FBFD;*/
 }
 .el-menu-item{
   width: 100%;
@@ -106,6 +103,7 @@ export default {
 .el-menu{
   border-style: none;
   border-radius: 15px;
+  /*background-color: #F3FBFD;*/
   background-color: #f8f8f8;
 }
 /deep/ .el-upload{

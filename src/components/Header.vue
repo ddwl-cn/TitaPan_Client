@@ -1,9 +1,7 @@
 <template>
-  <el-container class="header-main-container">
+  <el-container class="header-main-container" style="width: 100%;background-color: #F3FBFD;">
     <div class="avatar-right">
-
       <div>
-
         <el-popover
             placement="left-start"
             title=""
@@ -29,6 +27,8 @@
 </template>
 
 <script>
+// import 'bootstrap/dist/js/bootstrap.js'
+// import 'bootstrap/dist/css/bootstrap.min.css'
 export default {
   name: "Header",
   data(){
@@ -76,17 +76,25 @@ export default {
 
 <style scoped>
 .header-main-container{
+  background: rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-radius: 25px;
+  /*box-shadow:inset 0 0 6px rgba(255, 255, 255, 0.2);*/
+
   height: 90px;
-  width: 103%;
-  margin-left: -20px;
+  width: 100%;
+  margin-left: 0;
+  margin-top: 10px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content:center;
   /*background-image: url(../assets/background.jpg);*/
   /*background-size: cover;*/
 }
 .avatar-right{
   text-align:right;
-  margin:auto 5% auto 95%;
-
+  margin:auto 5px auto auto;
 }
 .el-avatar{
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.6);

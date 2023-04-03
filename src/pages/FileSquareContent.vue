@@ -1,5 +1,5 @@
 <template>
-  <el-container class="is-vertical shadow-container">
+  <el-container class="is-vertical shadow-container" style="height: 96%;width: 99%">
     <el-header style="height: 20px">
       <el-input style="margin-top: 10px;margin-right: 10px; float: right"
                 v-model="search"
@@ -15,8 +15,8 @@
       </el-input>
     </el-header>
     <el-main style="margin-top: 10px">
-      <el-row type="flex" justify="space-around" :gutter="20" v-for="i in Math.ceil(data.showNumber/4)" :key="getUUID()">
-        <el-col :span="6" v-for="j in (data.showNumber-(i-1)*4)>4?4:(data.showNumber-(i-1)*4)" :key="getUUID()">
+      <el-row style="height: 40%" type="flex" justify="space-around" :gutter="20" v-for="i in Math.ceil(data.showNumber/4)" :key="getUUID()">
+        <el-col :span="6" v-for="j in (data.showNumber-(i-1)*4)>4?4:(data.showNumber-(i-1)*4)" :key="getUUID()" >
           <FileInfoBox :publicFileInfo="data.publicFileList[(i-1)*4+j-1]"></FileInfoBox>
         </el-col>
       </el-row>
@@ -123,6 +123,7 @@ export default {
   height: 540px;
   display: flex;
   flex-wrap: wrap;
+  margin-top: 5px;
 }
 /deep/ .el-input .el-input__inner {
   height: 40px;
