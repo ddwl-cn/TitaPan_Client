@@ -7,6 +7,7 @@ import ShareMain from "../pages/ShareMain.vue"
 import ExtractMain from "../pages/ExtractMain.vue"
 import FileSquareMain from "../pages/FileSquareMain.vue"
 import FileInfoPage from "@/pages/FileInfoPage";
+import userInfoMain from "@/pages/UserInfoMain";
 
 export default new VueRouter({
   routes: [
@@ -60,6 +61,10 @@ export default new VueRouter({
         {
           path: "fileSquare",
           component: FileSquareMain,
+        },
+        {
+          path: "userInfo",
+          component: userInfoMain,
         },
         {
           path: "fileInfoPage/:fid",

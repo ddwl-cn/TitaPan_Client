@@ -9,7 +9,7 @@
             @show="getUserInfo()"
             trigger="hover">
           <el-avatar  slot="reference" :size="50">
-            <el-image :src="require('../assets/default_avatar.jpg')"></el-image>
+            <el-image :src="userInfo.avatar_url?userInfo.avatar_url:require('../assets/default_avatar.jpg')"></el-image>
           </el-avatar>
             <el-card shadow="hover">
               <div slot="header" class="clearfix">
@@ -66,7 +66,7 @@ export default {
 
   },
   mounted() {
-
+    this.getUserInfo();
   },
   computed:{
 
@@ -79,7 +79,7 @@ export default {
   background: rgba(255, 255, 255, 0.2);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  border-radius: 25px;
+  border-radius: 50%;
   /*box-shadow:inset 0 0 6px rgba(255, 255, 255, 0.2);*/
 
   height: 90px;

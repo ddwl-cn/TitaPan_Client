@@ -14,7 +14,7 @@
         ></el-button>
       </el-input>
     </el-header>
-    <el-main style="margin-top: 10px">
+    <el-main style="margin-top: 30px">
       <el-row style="height: 40%" type="flex" justify="space-around" :gutter="20" v-for="i in Math.ceil(data.showNumber/4)" :key="getUUID()">
         <el-col :span="6" v-for="j in (data.showNumber-(i-1)*4)>4?4:(data.showNumber-(i-1)*4)" :key="getUUID()" >
           <FileInfoBox :publicFileInfo="data.publicFileList[(i-1)*4+j-1]"></FileInfoBox>

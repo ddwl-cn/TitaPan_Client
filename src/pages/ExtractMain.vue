@@ -1,75 +1,75 @@
 <template>
-  <el-container class="is-vertical">
-    <el-header
-    >
+  <el-container class="is-vertical" style="margin-top: 5px; height: 96%;width: 99%">
+    <el-header style="margin-top: 10px">
       <el-row>
 
-        <el-col :span="6" :show-overflow-tooltip="true"
+        <el-col :span="8" :show-overflow-tooltip="true"
         >
           <div class="grid-content bg-purple">
             <el-image
                 v-if="shared_file_info.folder"
-                style="width: 30px; height: 30px; margin-top: 8px"
+                style="width: 40px; height: 40px; margin-top: 8px"
                 :src="require('../assets/icon/folder.png')"
             >
             </el-image>
             <el-image
                 v-else-if="$FileType.isApk(shared_file_info.f_name)"
-                style="width: 35px; height: 35px; margin-top: 8px"
+                style="width: 45px; height: 45px; margin-top: 8px"
                 :src="require('../assets/icon/apk.png')"
             ></el-image>
             <el-image
                 v-else-if="$FileType.isCode(shared_file_info.f_name)"
-                style="width: 35px; height: 35px; margin-top: 8px"
+                style="width: 45px; height: 45px; margin-top: 8px"
                 :src="require('../assets/icon/code.png')"
             ></el-image>
             <el-image
                 v-else-if="$FileType.isImg(shared_file_info.f_name)"
-                style="width: 35px; height: 35px; margin-top: 8px"
+                style="width: 45px; height: 45px; margin-top: 8px"
                 :src="require('../assets/icon/image.png')"
             ></el-image>
             <el-image
                 v-else-if="$FileType.isPdf(shared_file_info.f_name)"
-                style="width: 35px; height: 35px; margin-top: 8px"
+                style="width: 45px; height: 45px; margin-top: 8px"
                 :src="require('../assets/icon/pdf.png')"
             ></el-image>
             <el-image
                 v-else-if="$FileType.isWord(shared_file_info.f_name)"
-                style="width: 35px; height: 35px; margin-top: 8px"
+                style="width: 45px; height: 45px; margin-top: 8px"
                 :src="require('../assets/icon/word.png')"
             ></el-image>
             <el-image
                 v-else-if="$FileType.isExcel(shared_file_info.f_name)"
-                style="width: 35px; height: 35px; margin-top: 8px"
+                style="width: 45px; height: 45px; margin-top: 8px"
                 :src="require('../assets/icon/excel.png')"
             ></el-image>
             <el-image
                 v-else-if="$FileType.isCompress(shared_file_info.f_name)"
-                style="width: 35px; height: 35px; margin-top: 8px"
+                style="width: 45px; height: 45px; margin-top: 8px"
                 :src="require('../assets/icon/compress.png')"
             ></el-image>
             <el-image
                 v-else
-                style="width: 35px; height: 35px; margin-top: 8px"
+                style="width: 45px; height: 45px; margin-top: 8px"
                 :src="require('../assets/icon/other.png')"
             ></el-image>
+            <span style="display: inline-block;vertical-align: middle;margin-top: 7px;margin-left: 10px">
             {{
-              shared_file_info.f_name.substr(0, 8 > shared_file_info.length ? shared_file_info.length : 8) + (shared_file_info.f_name.length > 8 ? '...' : '')
+              shared_file_info.f_name.substr(0, 30 > shared_file_info.length ? shared_file_info.length : 30) + (shared_file_info.f_name.length > 30 ? '...' : '')
             }}
+              </span>
           </div>
         </el-col
         >
-        <el-col :span="4"
+        <el-col :span="4" style="margin-top: 20px"
         >
           <div class="grid-content bg-purple-light">
             {{ shared_file_info.f_size }}
           </div>
         </el-col
         >
-        <el-col :span="13">过期时间：{{ share_link_info.expire_date }}</el-col>
+        <el-col :span="12" style="margin-top: 20px">过期时间：{{ share_link_info.expire_date }}</el-col>
       </el-row>
-    </el-header
-    >
+    </el-header>
     <el-main style="line-height: 15px; padding: 0; height: 500px">
       <el-dialog
           title="保存到："
@@ -132,14 +132,17 @@
         </el-container>
       </el-dialog>
 
-      <div style="width: 150px; align-items: center">
+      <div style="width: 350px; align-items: center;margin-top: 40px;margin-left: 40px">
         分享码：
         <el-input
             v-model="form.share_code"
             placeholder="输入分享码获取文件..."
             maxlength="6"
-        ></el-input>
-        <el-button type="primary" @click="dialogTableVisible = true;userPath = '/';getUserFolderList()">提取</el-button>
+            style="margin-top: 20px;"
+        >
+        </el-input>
+        <el-button type="primary" @click="dialogTableVisible = true;userPath = '/';getUserFolderList()"
+                   style="margin-top: 20px;">提取到</el-button>
       </div>
     </el-main>
   </el-container>
@@ -368,9 +371,15 @@ export default {
 .el-container {
   background-color: white;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  margin-bottom: 40px;
+  /*margin-bottom: 40px;*/
 }
-
+.el-image{
+  display: inline-block;
+  vertical-align: middle;
+}
+.el-col{
+  text-align: center;
+}
 .el-header {
 }
 </style>

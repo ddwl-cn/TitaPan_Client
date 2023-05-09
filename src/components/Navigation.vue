@@ -1,5 +1,5 @@
 <template>
-  <el-container style="height: 100%;overflow:hidden;" class="shadow-container">
+  <el-container style="height: 100%;overflow:hidden;background-color: #f8f8f8;" class="shadow-container">
     <el-menu @select="menuSelected" style="height: 100%">
       <el-card shadow="hover">
         <router-link to="/user/home" >
@@ -29,8 +29,17 @@
                 :src="require('../assets/icon/'+selected_icon[2][switches[index][2]])"></el-image>文件广场</el-menu-item>
         </router-link>
       </el-card>
+      <el-card shadow="hover">
+        <router-link to="/user/userInfo">
+          <template slot="title">个人中心</template>
+          <el-menu-item index="4">
+            <el-image
+                style="width: 30px; height: 30px; margin-right: 5px;margin-bottom: 2px"
+                :src="require('../assets/icon/'+selected_icon[3][switches[index][3]])"></el-image>个人中心</el-menu-item>
+        </router-link>
+      </el-card>
     </el-menu>
-    <el-footer style="margin-bottom: 275px">
+    <el-footer style="margin-bottom: 275px;  background-color: #f8f8f8;">
       <el-upload
           class="upload-demo"
           drag
@@ -57,10 +66,11 @@ export default {
       selected_icon: [
         ["home.png", "home-selected.png"],
         ["share.png", "share-selected.png"],
+        ["fileSquare.png", "fileSquare-selected.png"],
         ["fileSquare.png", "fileSquare-selected.png"]
       ],
       // 四种状态
-      switches:[[0,0,0],[1,0,0],[0,1,0],[0,0,1]],
+      switches:[[0,0,0,0],[1,0,0,0],[0,1,0,0],[0,0,1,0], [0,0,0,1]],
     }
   },
   components: {},

@@ -15,7 +15,6 @@ export default {
 <style>
 #app{
   height: 100%;
-  /*background-image: url(./assets/background.jpg);*/
 }
 /*.page-scroll {*/
 /*  height: 100%;*/

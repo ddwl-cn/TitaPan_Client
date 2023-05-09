@@ -2,14 +2,15 @@
   <el-container class="login login-wrap shadow-container">
       <el-row type="flex" justify="center">
         <el-form
-          ref="loginForm"
+          ref="form"
+          :rules="rules"
           :model="userInfo"
           status-icon
           label-width="80px"
         >
           <h3>注册</h3>
           <hr />
-          <el-form-item prop="username" label="用户名">
+          <el-form-item id="u_name" prop="u_name" label="用户名">
             <el-input
               v-model="userInfo.u_name"
               placeholder="请输入用户名"
@@ -25,7 +26,7 @@
           ></el-input>
           </el-form-item>
 
-          <el-form-item id="password" prop="password" label="密码">
+          <el-form-item id="u_password" prop="u_password" label="密码">
             <el-input
               v-model="userInfo.u_password"
               show-password
@@ -33,8 +34,8 @@
             ></el-input>
           </el-form-item>
           <el-form-item
-            id="repassword"
-            prop="repassword"
+            id="r_password"
+            prop="r_password"
             label="确认密码"
           >
             <el-input
@@ -70,6 +71,23 @@ export default {
         r_password: "",
         nike_name: "",
       },
+      rules:{
+        u_name:[
+          { required: true, message: "用户名不能为空", trigger: "blur" },
+          { pattern: /^[a-zA-Z0-9_-]{4,20}$/, message: '用户名只应包含字母、数字、下划线和短横线，长度为4到20个字符', trigger: 'blur' }
+        ],
+        nike_name:[
+          { required: true, message: "昵称不能为空", trigger: "blur" },
+          { pattern: /^[\w\u4e00-\u9fa5-]{4,20}$/, message: '昵称只应包含汉字、字母、数字、下划线和短横线，长度为4到20个字符', trigger: 'blur' }
+        ],
+        u_password:[
+          { required: true, message: "密码不能为空", trigger: "blur" },
+          { pattern: /^(?=.*[\d|a-zA-Z])[\dA-Za-z@_.*-+]{4,20}$/, message: '密码只应包含字母、数字、@ _ . * - +这些特殊符号，且长度为4到20个字符', trigger: 'blur' }
+        ],
+        // r_password: [
+        //   {pattern: /^(\w{6,20})$/.test(this.userInfo.u_password) && this.userInfo.u_password === this.userInfo.r_password, message: '两次密码不一致', trigger: 'blur' }
+        // ]
+      }
     };
   },
   methods: {
@@ -92,33 +110,38 @@ export default {
         });
         return;
       }
-      this.userInfo.u_password = MD5(this.userInfo.u_password)
-      this.$http({
-        method: "POST",
-        url: "/registry",
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        data: this.userInfo,
-      }).then((response) => {
-        if (response.data.msg === "registrySuccess") {
-          this.$message({
-            type: "success",
-            message: "注册成功,前往登录!",
-          });
-          this.$router.push("/login");
-        } else if (response.data.msg === "userExisted") {
-          this.$message({
-            type: "warring",
-            message: "用户已存在！",
-          });
-        } else {
-          this.$message({
-            type: "error",
-            message: "未知错误！",
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.userInfo.u_password = MD5(this.userInfo.u_password)
+          this.$http({
+            method: "POST",
+            url: "/registry",
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            data: this.userInfo,
+          }).then((response) => {
+            if (response.data.msg === "registrySuccess") {
+              this.$message({
+                type: "success",
+                message: "注册成功,前往登录!",
+              });
+              this.$router.push("/login");
+            } else if (response.data.msg === "userExist") {
+              this.$message({
+                type: "warning",
+                message: "用户已存在！",
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: "未知错误！",
+              });
+            }
           });
         }
-      });
+
+      })
     },
   },
 };
@@ -151,8 +174,14 @@ export default {
 .el-row{
   margin-left: 40px;
 }
-#password {
-  margin-bottom: 5px;
+#u_password {
+  margin-bottom: 35px;
+}
+#u_name{
+  margin-bottom: 35px;
+}
+#nike_name{
+  margin-bottom: 35px;
 }
 h3 {
   color: #0babeab8;

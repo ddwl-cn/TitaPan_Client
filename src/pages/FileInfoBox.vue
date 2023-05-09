@@ -1,16 +1,19 @@
 <template>
   <el-card :body-style="{ padding: '0px' }">
     <div slot="header" class="clearfix">
-      <img :src="publicFileInfo.preview_url" class="image">
+      <router-link :underline="false" type="info" :to="'/user/fileInfoPage/' + publicFileInfo.fid">
+        <img :src="publicFileInfo.preview_url" class="image">
+      </router-link>
       <el-button style="float: right; padding-top: 20px" type="text" @click="dialogTableVisible = true;userPath = '/';getUserFolderList()">保存到网盘</el-button>
     </div>
     <div style="padding: 10px;">
-      <span><el-link :underline="false" type="info"><p>{{publicFileInfo.n_name}}</p></el-link></span>
+      <span><router-link :underline="false" type="info" :to="'/user/fileInfoPage/' + publicFileInfo.fid"><p>{{publicFileInfo.n_name}}</p></router-link></span>
       <div class="bottom clearfix">
         <p class="p-info">{{publicFileInfo.f_description}}</p>
 <!--        <span class="mini-font">下载量:{{publicFileInfo.downloads}}</span> <span class="mini-font">软件评分:{{publicFileInfo.score}}</span>-->
       </div>
       <el-dialog
+          style="border-radius: 10px"
           title="保存到："
           :visible.sync="dialogTableVisible"
           width="40%"
@@ -105,6 +108,9 @@ export default {
         if(res.status === 200 && res.data.status === 200){
           this.$message.success('已保存！');
         }
+        else if(res.data.msg === "fileNameRepetitive"){
+          this.$message.warning('已有重名文件！')
+        }
         else{
           this.$message({
             type: "error",
@@ -197,7 +203,7 @@ img{
   -webkit-line-clamp: 3;
   overflow: hidden;
 }
-.el-link{
+.router-link{
   text-decoration: none;
   font-size: 12px;
   font-weight: 900;
@@ -206,5 +212,17 @@ img{
 .mini-font{
   font-size: 12px;
   -webkit-transform: scale(0.2);
+}
+a {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 900;
+  margin: -15px 0;
+  color: darkgray;
+
+}
+
+.router-link-active {
+  text-decoration: none;
 }
 </style>
