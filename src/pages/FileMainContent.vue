@@ -718,7 +718,7 @@ export default {
         return;
       }
       // 正则表达式验证分享码
-      var zg =  /^[0-9a-zA-Z]*$/;
+      var zg =  /^[a-zA-Z0-9]{6}$/;
       if (!zg.test(this.shareForm.share_code))  {
         this.$message({
           type: "warning",

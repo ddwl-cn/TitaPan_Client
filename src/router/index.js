@@ -8,6 +8,7 @@ import ExtractMain from "../pages/ExtractMain.vue"
 import FileSquareMain from "../pages/FileSquareMain.vue"
 import FileInfoPage from "@/pages/FileInfoPage";
 import userInfoMain from "@/pages/UserInfoMain";
+import UploadPublicFileMain from "@/pages/UploadPublicFileMain";
 
 export default new VueRouter({
   routes: [
@@ -61,6 +62,10 @@ export default new VueRouter({
         {
           path: "fileSquare",
           component: FileSquareMain,
+        },
+        {
+          path: "uploadPublicFileMain",
+          component: UploadPublicFileMain,
         },
         {
           path: "userInfo",
