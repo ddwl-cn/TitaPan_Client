@@ -77,7 +77,7 @@ export default {
             this.$notify({
               title: 'Tita！',
               message: this.$createElement('i', {style: 'color: teal'}, '这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n这是欢迎文案\n'),
-              duration: 0
+              duration: 10000
             });
             // 把token存入本地存储
             localStorage.setItem("token", response.headers.token);

@@ -138,7 +138,7 @@
         <el-table-column
             prop="suggestion"
             label="建议"
-            width="500">
+            width="450">
           <template slot-scope="scope">
             <span v-if="scope.row.suggestion === null">---</span>
             <span v-else>{{scope.row.suggestion}}</span>
@@ -148,7 +148,7 @@
         <el-table-column
             prop="state"
             label="审核状态"
-            width="80">
+            width="100">
           <template slot-scope="scope">
             <div>
               <div>

@@ -16,20 +16,21 @@
           slot="trigger"
           size="small"
           type="success"
-          round
-          style="margin-right: 10px;margin-top: 10px"
-          >在当前目录上传文件</el-button>
+          icon="el-icon-upload2"
+          style="margin-right: 10px;margin-top: 10px;"
+        >在当前目录上传文件</el-button>
 
         <el-button
           type="success"
           size="small"
-          round
           @click="dialogTableVisible = true"
+          icon="el-icon-sort"
           style="margin-right: 10px"
           ><el-badge
             :value="total - finished"
             :max="10"
             class="item"
+
             :hidden="total - finished === 0"
             ><div style="margin-right: 8px">查看上传列表</div>
           </el-badge></el-button
@@ -48,11 +49,12 @@
               })
             "
             height="300"
+            width="100%"
           >
             <el-table-column
               property="fileName"
               label="文件名"
-              width="100"
+              width="200"
               style="height: 15px"
               align="center"
               :show-overflow-tooltip="true"
@@ -60,37 +62,35 @@
             <el-table-column
               property="percentage"
               label="上传进度"
-              width="500"
+              width="550"
               style="height: 15px"
               align="center"
             >
               <template slot-scope="scope">
                 <el-progress
-                  :text-inside="true"
-                  :stroke-width="15"
-                  :percentage="parseFloat(scope.row.percentage.toFixed(2))"
+                  :text-inside="false"
+                  :stroke-width="8"
+                  :percentage="parseFloat(scope.row.percentage).toFixed(2)"
                 ></el-progress>
               </template>
             </el-table-column>
             <el-table-column
               property=""
               label="操作"
-              width="200"
               style="height: 15px"
               align="center"
             >
               <template slot-scope="scope">
                 <el-button
-                  type="warning"
-                  round
+                  type="text"
                   v-if="scope.row.isUploading === 1"
                   size="mini"
                   @click="pauseUpload(scope.row)"
-                  >暂停
+                  ><i class="el-icon-video-pause" style="font-size: 24px"></i>
                 </el-button>
+
                 <el-button
-                  type="primary"
-                  round
+                  type="text"
                   v-else-if="
                     scope.row.isUploading === 0 ||
                     scope.row.isUploading === 2 ||
@@ -103,38 +103,35 @@
                     v-if="
                       scope.row.isUploading === 0 || scope.row.isUploading === 2
                     "
-                    >继续上传</span
-                  ><span v-if="scope.row.isUploading === 4"
-                    >大文件请耐心等待...</span
-                  ></el-button>
+                ><i class="el-icon-video-play" style="font-size: 24px"></i></span>
+                  <span v-if="scope.row.isUploading === 4">大文件请耐心等待...</span>
+                </el-button>
                 <el-button
-                  type="warning"
-                  round
-                  v-if="scope.row.isUploading === 1"
+                  type="text"
+                  v-if="scope.row.isUploading === 1 || scope.row.isUploading === 2"
                   size="mini"
-                  icon="el-icon-error"
                   @click="cancelUpload(scope.row)"
-                  >取消
+                  ><i class="el-icon-circle-close" style="font-size: 24px"></i>
                 </el-button>
               </template>
             </el-table-column>
           </el-table>
         </el-dialog>
 
-        <el-button type="primary" round size="small" @click="handleCreateFolder"
+        <el-button icon="el-icon-folder-add" type="primary" size="small" @click="handleCreateFolder"
           >新建文件夹</el-button
         >
         <el-button
           type="warning"
-          round
           size="small"
+          icon="el-icon-download"
           @click="handleDownloadSelected"
           >下载已选</el-button
         >
         <el-button
           type="danger"
-          round
           size="small"
+          icon="el-icon-delete"
           @click="handleDeleteSelected"
           >删除已选</el-button
         >

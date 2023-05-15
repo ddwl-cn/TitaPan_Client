@@ -46,7 +46,6 @@ new Vue({
         if (response.headers.data) {
           let data = JSON.parse(response.headers.data);
           if (data.msg === "invalidToken") {
-            console.log("token验证失败");
             this.$router.push("/login");
             this.$message({
               type: "error",
@@ -57,7 +56,6 @@ new Vue({
         return response;
       },
       (error) => {
-        console.log(error.response);
         // 响应失败该做的事儿
         return Promise.reject(error);
       }

@@ -106,7 +106,7 @@
         <div style="font-size: 18px; margin-top: 15px;height: 100%">
           <strong>资源介绍：</strong>
           <div class="highlight-box">
-            <p style="text-indent: 2em;text-align:left;line-height:35px;font-size: 16px;white-space: pre-wrap;font-weight: 500" v-for="(paragraph, index) in formattedText" :key="index" v-html="paragraph"></p>
+            <p style="color: #449fb3;text-indent: 2em;text-align:left;line-height:35px;font-size: 16px;white-space: pre-wrap;font-weight: 500" v-for="(paragraph, index) in formattedText" :key="index" v-html="paragraph"></p>
 <!--            <p style="text-indent: 2em;text-align:left;line-height:35px;font-size: 16px;white-space: pre-wrap;">{{fileInfo.f_description}}</p>-->
           </div>
           <div class="highlight-box" style="height: 80px">
@@ -120,11 +120,11 @@
                 score-template="{value}">
             </el-rate>
             <div style="display: inline-block; margin-left: 40px;float:right;">
-              <el-tag>标签一</el-tag>
-              <el-tag type="success">标签二</el-tag>
-              <el-tag type="info">标签三</el-tag>
-              <el-tag type="warning">标签四</el-tag>
-              <el-tag type="danger">标签五</el-tag>
+              <el-tag>小文件</el-tag>
+              <el-tag type="success">工具</el-tag>
+              <el-tag type="info">软件</el-tag>
+<!--              <el-tag type="warning"></el-tag>-->
+<!--              <el-tag type="danger">标签五</el-tag>-->
             </div>
           </div>
 
@@ -200,7 +200,7 @@
                   <div class="reply-info">
 <!--                    <div tabindex="0" contenteditable="true" spellcheck="false" placeholder="输入评论..."   @input="onDivInput($event)"  class="reply-input reply-comment-input"></div>-->
                     <el-input tabindex="0" contenteditable="true" spellcheck="false" placeholder="资源好不好？留下你的评论..." class="reply-input reply-comment-input" v-model="replyComment">
-                      <template slot="prepend">回复给: {{reply_nike_name}}</template>
+                      <template slot="prepend"><span style="color: #66b1ff">回复给: {{reply_nike_name}}</span></template>
 <!--                      ? item.nike_name : item.replies[reply_to].nike_name}}-->
                     </el-input>
                   </div>
@@ -238,7 +238,7 @@
                     </div>
                     <div class="talk-box">
                       <p>
-                        <span>回复 {{reply.reply_nike_name}}:</span>
+                        <span style="color: #66b1ff;">回复 {{reply.reply_nike_name}}：</span>
                         <span class="reply">{{reply.content}}</span>
                       </p>
                     </div>
@@ -473,19 +473,6 @@ export default {
             content.innerHTML = '';
           }
         })
-
-        // let a ={}
-        // let input =  document.getElementById('replyInput')
-        // let timeNow = new Date().getTime();
-        // let time= this.dateStr(timeNow);
-        // a.name= this.myName
-        // a.comment =this.replyComment
-        // a.headImg = this.myHeader
-        // a.time = time
-        // a.commentNum = 0
-        // a.like = 0
-        // this.comments.push(a)
-
       }
     },
     sendCommentReply(i, j){
@@ -496,7 +483,6 @@ export default {
           message:'评论不能为空'
         })
       }else{
-        console.log(j, this.comments[i].replies)
         let comment = {
           fid: this.fid,
           belong_to: this.comments[i].cid,
@@ -519,21 +505,6 @@ export default {
             document.getElementsByClassName("reply-comment-input")[i].innerHTML = ""
           }
         })
-
-
-        // let a ={}
-        // let timeNow = new Date().getTime();
-        // let time= this.dateStr(timeNow);
-        // a.from= this.myName
-        // a.to = this.to
-        // a.fromHeadImg = this.myHeader
-        // a.comment =this.replyComment
-        // a.time = time
-        // a.commentNum = 0
-        // a.like = 0
-        // this.comments[i].reply.push(a)
-        // this.replyComment = ''
-        // document.getElementsByClassName("reply-comment-input")[i].innerHTML = ""
       }
     },
     deleteComment(cid){
@@ -551,11 +522,7 @@ export default {
       })
     },
     onDivInput(e) {
-      console.log(typeof e === typeof "string",typeof e, e)
       this.replyComment = e.target.innerHTML;
-    },
-    onElInput(e){
-      console.log(e)
     },
     getComment(){
       this.$http({
@@ -697,9 +664,12 @@ export default {
   },
   computed:{
     formattedText(){
-      return this.fileInfo.f_description.split("\n").map(
-          (paragraph) => `<span class="indent">${paragraph}</span>`
-      );
+      // 识别文本格式
+      if(typeof(this.fileInfo.f_description) !== 'undefined')
+        return this.fileInfo.f_description.split("\n").map(
+            (paragraph) => `<span class="indent">${paragraph}</span>`
+        );
+      else return '';
     }
   },
   mounted() {
@@ -707,7 +677,6 @@ export default {
     this.getComment();
     this.getUserInfo();
     this.getMark();
-    console.log(this)
   },
 }
 </script>
@@ -736,7 +705,8 @@ a {
   width: 60px;
 }
 .highlight-box {
-  background-color: #f7f7f7;
+  background-color: #ffffff;
+  /*background-color: #f7f7f7;*/
   padding: 10px;
   border-radius: 5px;
   margin-top: 20px;

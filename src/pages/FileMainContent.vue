@@ -134,7 +134,11 @@
               sortable
           />
           <span v-show="!scope.row.isEdit">
-            <span v-if="!scope.row.isFolder">{{ scope.row.f_name }}</span>
+            <span v-if="!scope.row.isFolder">
+              <el-link type="info" :underline="false" @click="preview(scope.row)">
+              {{ scope.row.f_name }}
+              </el-link>
+            </span>
             <el-link
                 type="primary"
                 v-if="scope.row.isFolder"
@@ -276,7 +280,7 @@
                 icon="el-icon-download"
                 size="mini"
                 v-show="!scope.row.isEdit"
-                @click="downloadFile(scope.row)"
+                @click="handleDownloadFile(scope.row)"
             ></el-button>
           </div>
         </template>
@@ -286,12 +290,15 @@
 </template>
 
 <script>
-import streamSaver from "../js/streamSaver.js";
+import streamSaver from '../js/streamSaver.js'
+
 import { v4 as UUID } from "uuid";
 export default {
   name: "FileMainContent",
   data() {
     return {
+      downloadList: {},
+
       fileType: '全部',
       // 加载中
       loadingData: false,
@@ -411,6 +418,7 @@ export default {
       this.saveFileName(rowData);
     },
     cancelChange(rowData) {
+      console.log(rowData)
       rowData.isEdit = false;
       // 新建目录取消后过滤掉该目录
       this.userFiles = this.userFiles.filter((item) => {
@@ -581,7 +589,51 @@ export default {
         });
       });
     },
+    handleDownloadFile(rowData) {
+      if(rowData.isFolder) {
+        this.$confirm("所选下载文件包含文件夹，文件夹将以压缩包(.zip)格式返回, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }).then(() => {
+            this.downloadFile(rowData);
+        })
+      }
+      else{
+          this.downloadFile(rowData);
+      }
+    },
     downloadFile(rowData) {
+      // // 加入下载列表
+      // this.downloadList[rowData.fid] = rowData;
+      // this.downloadList[rowData.fid]['percentage'] = 0.0;
+      // // axios 请求下载要等下载完成后浏览器才会弹出列表
+      // this.$http({
+      //   responseType: 'blob',
+      //   url:`/download/single?f_name=` + rowData.old_f_name,
+      //   onDownloadProgress: progressEvent => {
+      //     // 更新百分比
+      //     this.downloadList[rowData.fid]['percentage'] = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+      //     // 下载完成提示
+      //     if(progressEvent.loaded >= progressEvent.total){
+      //       this.$notify({
+      //         title: '文件：' + rowData.old_f_name,
+      //         message: this.$createElement('i', {style: 'color: teal'}, '下载完成！'),
+      //         duration: 5000
+      //       });
+      //     }
+      //   },
+      // }).then(response => {
+      //   const url = window.URL.createObjectURL(new Blob([response.data]))
+      //   const link = document.createElement('a')
+      //   link.href = url
+      //   link.setAttribute('download', rowData.old_f_name + (rowData.isFolder ? ".zip" : ""))
+      //   document.body.appendChild(link)
+      //   link.click()
+      // }).catch(error => {
+      //   this.$message.error("网络错误：" + error.message);
+      // })
+
       fetch(`${this.$global.host}:${this.$global.serverport}/download/single?f_name=` + rowData.old_f_name, { // 使用old_f_name 防止在修改名字的过程中下载该文件
         method: "POST",
         mode: "cors", // 跨域
@@ -589,8 +641,7 @@ export default {
         headers: {
           token: localStorage.getItem("token"),
         },
-      })
-          .then((res) => {
+      }).then((res) => {
             // 创建写入流 filename为下载的文件名
             const fileStream = streamSaver.createWriteStream((rowData.old_f_name + (rowData.isFolder ? ".zip" : "")), {
               size: res.headers.get("content-length"),
@@ -601,17 +652,20 @@ export default {
             }
             window.writer = fileStream.getWriter();
             const reader = res.body.getReader();
-            const pump = () => reader.read().then((res) =>
-
-                res.done
-                    ? window.writer.close()
-                    : window.writer.write(res.value).then(pump)
+            const pump = () => reader.read().then((res) => {
+              res.done
+                  ? window.writer.close()
+                  : window.writer.write(res.value).then(pump)
+              }
             );
             pump();
-
           })
-          .then((error) => {
-
+          .then(() => {
+            this.$notify({
+              title: '文件：' + rowData.old_f_name,
+              message: this.$createElement('i', {style: 'color: teal'}, '下载完成！'),
+              duration: 5000
+            });
           });
     },
     downloadSelected(rows) {
@@ -638,6 +692,11 @@ export default {
 
     },
     createFolder() {
+      let flag = false;
+      this.userFiles.forEach((item) => {
+        if(item.fid === 0) flag = true;
+      });
+      if(flag) return;
       let res = {
         uid: 0,
         fid: 0,
@@ -907,7 +966,6 @@ export default {
       document.removeEventListener('click', this.foo) // 关掉监听，
     },
     styleMenu(event, menu) {
-      console.log(event, menu)
       if (event.clientX > 1200) {
         menu.style.left = event.clientX - 100 + 'px'
       } else {
@@ -963,9 +1021,6 @@ export default {
   computed: {
     fileList() {
       // 返回筛选过过关键词后的文件列表
-      this.userFiles.forEach(data=>{
-        console.log(this.fileType, this.fileTypeValue(data)===this.fileType);
-      })
 
       return this.userFiles.filter((data) =>
           !this.search || data.f_name.toLowerCase().includes(this.search.toLowerCase()))

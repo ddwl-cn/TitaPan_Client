@@ -245,7 +245,7 @@ export default {
           })
         } else {
           // 表单验证不通过，阻止表单提交
-          console.log("表单验证不通过");
+          // console.log("表单验证不通过");
         }
       });
     },

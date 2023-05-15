@@ -96,7 +96,6 @@ export default {
   },
   methods: {
     judgeDate(formatDate_1, formatDate_2) {
-      console.log(formatDate_1, formatDate_2)
       if (
           parseInt(formatDate_1.substr(0, 4)) >
           parseInt(formatDate_2.substr(0, 4))

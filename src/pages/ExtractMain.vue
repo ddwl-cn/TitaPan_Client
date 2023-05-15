@@ -70,7 +70,7 @@
         <el-col :span="12" style="margin-top: 20px">过期时间：{{ share_link_info.expire_date }}</el-col>
       </el-row>
     </el-header>
-    <el-main style="line-height: 15px; padding: 0; height: 500px">
+    <el-main style="line-height: 15px; padding: 0; height: 500px;">
       <el-dialog
           title="保存到："
           :visible.sync="dialogTableVisible"
@@ -132,17 +132,30 @@
         </el-container>
       </el-dialog>
 
-      <div style="width: 350px; align-items: center;margin-top: 40px;margin-left: 40px">
-        分享码：
+      <div style="width: 350px;margin-top: 40px;margin-left: 40px;display: flex; align-items: center;justify-content: center;">
+        <span style="display: inline-block; font-size: 12px;vertical-align: middle;width: 150px;margin-top: 25px">分享码：</span>
+<!--        <label for="share-code-input">分享码：</label>-->
         <el-input
             v-model="form.share_code"
             placeholder="输入分享码获取文件..."
             maxlength="6"
-            style="margin-top: 20px;"
+            :inline="true"
+            style="margin-top: 20px;display: inline-block;vertical-align: middle;"
         >
+
         </el-input>
-        <el-button type="primary" @click="dialogTableVisible = true;userPath = '/';getUserFolderList()"
-                   style="margin-top: 20px;">提取到</el-button>
+        <el-button size="small"  type="primary" @click="dialogTableVisible = true;userPath = '/';getUserFolderList()"
+                    style="margin-top: 20px;display: inline-block;vertical-align: middle;margin-left: 15px">提取到</el-button>
+
+<!--        <el-input v-model="inputValue" placeholder="请输入内容" clearable>-->
+<!--          <template #prefix>-->
+<!--            <span>分享码：</span>-->
+<!--          </template>-->
+<!--          <template #append>-->
+<!--            <el-button type="primary" @click="handleButtonClick">按钮</el-button>-->
+<!--          </template>-->
+<!--        </el-input>-->
+
       </div>
     </el-main>
   </el-container>
@@ -381,5 +394,16 @@ export default {
   text-align: center;
 }
 .el-header {
+}
+.input-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.input-group label {
+  margin-right: 10px;
+  width: 150px;
 }
 </style>
