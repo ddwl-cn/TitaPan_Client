@@ -36,10 +36,11 @@
           </el-badge></el-button
         >
 
-        <el-dialog
+        <el-drawer
           :title="'上传完成(' + finished + '/' + total + ')'"
           :visible.sync="dialogTableVisible"
-          width="70%"
+          width="100%"
+          size="50%"
           align="left"
         >
           <el-table
@@ -48,13 +49,13 @@
                 return item.isUploading !== 3 && item.isUploading !== 5;
               })
             "
-            height="300"
+            height="100%"
             width="100%"
           >
             <el-table-column
               property="fileName"
               label="文件名"
-              width="200"
+              width="150"
               style="height: 15px"
               align="center"
               :show-overflow-tooltip="true"
@@ -62,7 +63,7 @@
             <el-table-column
               property="percentage"
               label="上传进度"
-              width="550"
+              width="450"
               style="height: 15px"
               align="center"
             >
@@ -70,8 +71,21 @@
                 <el-progress
                   :text-inside="false"
                   :stroke-width="8"
-                  :percentage="parseFloat(scope.row.percentage).toFixed(2)"
+                  :percentage="parseFloat(scope.row.percentage).toFixed(1)"
                 ></el-progress>
+
+              </template>
+
+            </el-table-column>
+            <el-table-column
+                property=""
+                label="   "
+                style="height: 15px"
+                width="150"
+                align="center"
+            >
+              <template slot-scope="scope">
+                {{ parseFloat(scope.row.uploadRate).toFixed(2) + 'MB/S'}}
               </template>
             </el-table-column>
             <el-table-column
@@ -116,7 +130,7 @@
               </template>
             </el-table-column>
           </el-table>
-        </el-dialog>
+        </el-drawer>
 
         <el-button icon="el-icon-folder-add" type="primary" size="small" @click="handleCreateFolder"
           >新建文件夹</el-button
@@ -155,6 +169,12 @@ export default {
       fileName_arr: [],
       // 文件数组
       file_arr: [],
+      // 上传时的时间戳 用于计算上传速度
+      uploadStamp: [],
+      // 上一次上传到多少
+      uploadLoaded: [],
+
+      uploadRate: [],
       // 是否正在在上传 0:未在上传 1: 正在上传 2: 暂停中 3: 完成 4: 加载状态 5: 取消该文件的上传
       isUploading: [],
       // 每个文件的上传进度
@@ -225,6 +245,10 @@ export default {
       });
       let e = this.file_arr.length;
       for (let i = 0; i < e - s; i++) {
+        // 获取上传时的时间戳
+        this.uploadStamp.push(Date.now());
+        this.uploadRate.push(0);
+        this.uploadLoaded.push(0);
         this.isUploading.push(0);
         this.percentage.push(0);
         this.uploadTag.push(0);
@@ -235,6 +259,7 @@ export default {
         });
         this.file_chunk_arr.push([]);
       }
+
       // 选择后自动开始上传
       for(let i = 0; i < this.file_arr.length; i++)
         this.handleUploadFile(i)
@@ -244,7 +269,7 @@ export default {
     handleUploadFile(i) {
       if (this.isUploading[i] === 1 || this.isUploading[i] === 3) return;
 
-      const std_chunk_size = 1024 * 1024 * 5; // 5MB 文件块
+      const std_chunk_size = 1024 * 1024; // 1MB 文件块
 
       let file = this.file_arr[i].blob;
       // 总共要分几块
@@ -254,10 +279,11 @@ export default {
       let original_file_name = file.name;
       let suffix = file.name.substr(file.name.lastIndexOf("."));
 
+      // flag用于标记如果是暂停后继续下载时 跳过读取文件和计算md5值的步骤
       let flag = 0;
       if (this.isUploading[i] === 0 || this.isUploading[i] === 2) {
         if (this.isUploading[i] === 2) flag = 1;
-        this.isUploading[i] = 1; // 正在上传
+        this.isUploading[i] = 1; // 状态标记为正在上传
         // 用于计算文件和分块的md5
         let c_file_md5 = new SparkMD5.ArrayBuffer();
 
@@ -324,6 +350,7 @@ export default {
                       method: "POST",
                       url: "/upload/commonUpload",
                       onUploadProgress: (progressEvent) => {
+
                         // 表单数据大小
                         let formSize =
                             progressEvent.total - this.file_chunk_arr[i][j].size;
@@ -338,6 +365,14 @@ export default {
                             1,
                             (loaded / totalSize) * 100
                         );
+
+                        // 每隔一秒左右计算一下上传速度
+                        if((Date.now() - this.uploadStamp[i]) / 1000 >= 1.0) {
+                          this.uploadRate.splice(i, 1, ((loaded - this.uploadLoaded[i]) / (1024 * 1024)) / ((Date.now() - this.uploadStamp[i]) / 1000))
+                          // 保存当前的上传量和时间戳
+                          this.uploadLoaded.splice(i, 1, loaded);
+                          this.uploadStamp.splice(i, 1, Date.now());
+                        }
                       },
                       data: form,
                     }).then((res) => {
@@ -352,6 +387,9 @@ export default {
                         this.file_chunk_arr.splice(i, 1, null);
                         this.md5_arr.splice(i, 1, null);
                         this.requestController.splice(i, 1, null);
+                        this.uploadStamp.splice(i, 1, 0);
+                        this.uploadRate.splice(i, 1, 0);
+
                         this.getUserFileList()
                       }
                       // 当前块上传完成
@@ -378,6 +416,7 @@ export default {
                       method: "POST",
                       url: "/upload/quickUpload",
                       onUploadProgress: () => {
+
                         this.percentage.splice(i, 1, (j / total) * 100);
 
                       },
@@ -393,11 +432,12 @@ export default {
                         this.file_chunk_arr.splice(i, 1, null);
                         this.md5_arr.splice(i, 1, null);
                         this.requestController.splice(i, 1, null);
+                        this.uploadStamp.splice(i, 1, 0);
+                        this.uploadRate.splice(i, 1, 0);
                         this.getUserFileList()
                       }
                       // 当前块上传完成
                       else if (res.data.msg === "uploadChunkComplete") {
-
                         this.uploadTag.splice(i, 1, this.uploadTag[i] + 1);
                         upload(++j);
                       }
@@ -436,6 +476,7 @@ export default {
             // 变为正在上传的状态
             this.isUploading.splice(i, 1, 1);
             // 略过已上传的分块
+
             upload(this.uploadTag[i]);
           } else {
             // 变为正在计算md5的状态
@@ -506,6 +547,8 @@ export default {
         isUploading: this.isUploading,
         percentage: this.percentage,
         requestController: this.requestController,
+        uploadStamp: this.uploadStamp,
+        uploadRate: this.uploadRate,
       };
     },
     getUserFileList(){
@@ -537,6 +580,8 @@ export default {
           isUploading: g.isUploading[index], // 上传状态
           percentage: g.percentage[index], // 上传进度
           requestController: g.requestController[index], // 请求控制器
+          uploadStamp: g.uploadStamp[index],
+          uploadRate: g.uploadRate[index], // 上传速度
         });
       });
       // table使用前过滤 掉已经上传完成的文件

@@ -37,7 +37,6 @@
         @select="handleSelect"
         @select-all="handleSelectAll"
         style=" margin-top: 10px;border-radius: 15px;"
-        @row-dblclick="preview"
         @row-contextmenu="rightClick"
         v-loading="loadingData"
         element-loading-text="数据加载中，请稍等......"
@@ -60,49 +59,49 @@
             <img
                 v-else-if="$FileType.isPPT(scope.row.f_name)"
                 :src="scope.row.preview_url?scope.row.preview_url:require('../assets/icon/ppt.png')"
-                :title="'ppt文档(双击可预览)'"
+                :title="'ppt文档(点击可预览)'"
             >
             <img
                 v-else-if="$FileType.isCode(scope.row.f_name)"
                 :src="scope.row.preview_url?scope.row.preview_url:require('../assets/icon/code.png')"
-                :title="'代码文件(双击可预览)'"
+                :title="'代码文件(点击可预览)'"
             >
             <img
                 v-else-if="$FileType.isImg(scope.row.f_name)"
                 fit:cover
                 :src="scope.row.preview_url"
-                :title="'图片文件(双击可预览)'"
+                :title="'图片文件(点击可预览)'"
             >
             <img
                 v-else-if="$FileType.isPdf(scope.row.f_name)"
                 :src="scope.row.preview_url?scope.row.preview_url:require('../assets/icon/pdf.png')"
-                :title="'pdf文档(双击可预览)'"
+                :title="'pdf文档(点击可预览)'"
             >
             <img
                 v-else-if="$FileType.isWord(scope.row.f_name)"
                 :src="scope.row.preview_url?scope.row.preview_url:require('../assets/icon/word.png')"
-                :title="'word文档(双击可预览)'"
+                :title="'word文档(点击可预览)'"
             >
             <img
                 v-else-if="$FileType.isExcel(scope.row.f_name)"
                 :src="scope.row.preview_url?scope.row.preview_url:require('../assets/icon/excel.png')"
-                :title="'excel文档(双击可预览)'"
+                :title="'excel文档(点击可预览)'"
             >
             <img
                 v-else-if="$FileType.isCompress(scope.row.f_name)"
                 :src="scope.row.preview_url?scope.row.preview_url:require('../assets/icon/compress.png')"
-                :title="'压缩文件(双击可预览)'"
+                :title="'压缩文件(点击可预览)'"
             >
             <img
                 v-else-if="$FileType.isMusic(scope.row.f_name)"
                 :src="scope.row.preview_url?scope.row.preview_url:require('../assets/icon/music.png')"
-                :title="'音频文件(双击可预览)'"
+                :title="'音频文件(点击可预览)'"
             >
             <img
                 v-else-if="$FileType.isVideo(scope.row.f_name)"
                 fit:cover
                 :src="scope.row.preview_url"
-                :title="'视频文件(双击可预览)'"
+                :title="'视频文件(点击可预览)'"
             >
             <img
                 v-else-if="$FileType.isExe(scope.row.f_name)"
@@ -182,8 +181,9 @@
               <el-option label="文件夹" value="1"></el-option>
               <el-option label="图片" value="2"></el-option>
               <el-option label="视频" value="3"></el-option>
-              <el-option label="压缩文件" value="4"></el-option>
-              <el-option label="其他" value="5"></el-option>
+              <el-option label="文档" value="4"></el-option>
+              <el-option label="压缩文件" value="5"></el-option>
+              <el-option label="其他" value="6"></el-option>
             </el-select>
           </el-input>
         </template>
@@ -340,7 +340,7 @@ export default {
           this.userFiles = this.handleFileData(res.data.data);
           this.loadingData = false;
         }
-        else if(!res.headers.data){
+        else{
           this.$message({
             type: "error",
             message: "未知错误!",
@@ -984,9 +984,13 @@ export default {
         return '2';
       if(this.$FileType.isVideo(file.f_name))
         return '3';
+      if(this.$FileType.isPPT(file.f_name) || this.$FileType.isWord(file.f_name)
+          || this.$FileType.isExcel(file.f_name) || this.$FileType.isPdf(file.f_name))
+        return '4'
       if(this.$FileType.isCompress(file.f_name))
-        return '4';
-      return '5';
+        return '5';
+
+      return '6';
     },
     mouseClick(event){
 

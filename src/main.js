@@ -43,15 +43,9 @@ new Vue({
       (response) => {
         // 响应成功该做的事儿
         // 将后端返回的信息转对象
-        if (response.headers.data) {
-          let data = JSON.parse(response.headers.data);
-          if (data.msg === "invalidToken") {
-            this.$router.push("/login");
-            this.$message({
-              type: "error",
-              message: "登录失效!",
-            });
-          }
+        if(response.data.msg === "invalidToken"){
+          this.$router.push("/login");
+          return Promise.reject(new Error("未登录或身份验证失效，请先登录！"));
         }
         return response;
       },
